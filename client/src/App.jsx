@@ -10,6 +10,9 @@ import {
   SignupForm,
   SignupImage,
 } from "./pages/auth";
+import Home from "./pages/NonAuthenticatePages/HomePage/Home";
+import DashboardLayout from "./components/ServiceProviderDashboard/DashboardLayout";
+import Overview from "./components/ServiceProviderDashboard/Overview";
 
 
 // import LoginForm from './pages/auth/Login'
@@ -22,6 +25,12 @@ function App() {
         <Routes>
           <Route
             path="/"
+            element={
+              <Home/>
+            }
+          />
+          <Route
+            path="/signup"
             element={
               <AuthLayout left={<SignupImage />} right={<SignupForm />} />
             }
@@ -45,6 +54,16 @@ function App() {
               />
             }
           />
+
+           <Route path="/dashboard" element={<DashboardLayout ><Overview /></DashboardLayout>}>
+          {/* <Route index element={<Overview />} /> */}
+          {/* <Route path="companies" element={<Companies />} />
+          <Route path="payments" element={<Payments />} />
+          <Route path="subscriptions" element={<Subscriptions />} />
+          <Route path="support" element={<SupportTickets />} />
+          <Route path="settings" element={<Settings />} /> */}
+        </Route>
+
         </Routes>
       </BrowserRouter>
     </>
