@@ -1,5 +1,6 @@
+import Sidebar from '../../../components/ServiceProviderDashboard/sidebar/Sidebar';
 import React from 'react';
-import Sidebar from './Sidebar';
+// import Sidebar from './Sidebar';
 import { FiMenu } from 'react-icons/fi';
 
 const DashboardLayout = ({ children }) => {

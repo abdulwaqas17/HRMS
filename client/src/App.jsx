@@ -11,8 +11,14 @@ import {
   SignupImage,
 } from "./pages/auth";
 import Home from "./pages/NonAuthenticatePages/HomePage/Home";
-import DashboardLayout from "./components/ServiceProviderDashboard/DashboardLayout";
-import Overview from "./components/ServiceProviderDashboard/Overview";
+import DashboardLayout from "./pages/AuthenticatePages/ServiceProviderDashboard/DashboardLayout";
+import Overview from "./components/ServiceProviderDashboard/overview";
+import CompanyDashboard from "./pages/AuthenticatePages/CompanyDashboard/CompanyDashboard";
+import CompOverview from "./components/CompanyDashboard/overview";
+import HRs from "./components/CompanyDashboard/Hrs";
+import NotFoundPage from "./pages/NotFoundPage ";
+import RegisteredCompanies from "./components/ServiceProviderDashboard/companies/register/registeredCompanies/RegisteredCompanies";
+import InviteRequests from "./components/ServiceProviderDashboard/companies/register/requets/Requets";
 
 
 // import LoginForm from './pages/auth/Login'
@@ -55,14 +61,24 @@ function App() {
             }
           />
 
-           <Route path="/dashboard" element={<DashboardLayout ><Overview /></DashboardLayout>}>
+            
+              { /* Service Provider Dashboard Routes */}
+           <Route path="/dashboard" element={<DashboardLayout ><Overview /></DashboardLayout>}/>
+           <Route path="/dashboard/companies" element={<DashboardLayout ><RegisteredCompanies /></DashboardLayout>}/>
+           <Route path="/dashboard/requets" element={<DashboardLayout ><InviteRequests /></DashboardLayout>}/>
+           
           {/* <Route index element={<Overview />} /> */}
           {/* <Route path="companies" element={<Companies />} />
           <Route path="payments" element={<Payments />} />
           <Route path="subscriptions" element={<Subscriptions />} />
           <Route path="support" element={<SupportTickets />} />
           <Route path="settings" element={<Settings />} /> */}
-        </Route>
+
+           { /* Company Dashboard Routes */}
+           <Route path="/company-dashboard" element={<CompanyDashboard><CompOverview/></CompanyDashboard>}/>
+           <Route path="/company-dashboard/hrs" element={<CompanyDashboard><HRs/></CompanyDashboard>}/>
+
+            <Route path="*" element={<NotFoundPage />} />
 
         </Routes>
       </BrowserRouter>
