@@ -10,7 +10,7 @@ const ServiceProviderSidebar = ({ isOpen }) => {
   const [companiesOpen, setCompaniesOpen] = useState(false);
   
   const navItems = [
-    { icon: <FiHome />, label: "Dashboard", path: "/owner/dashboard" },
+    { icon: <FiHome />, label: "Dashboard", path: "/sp/dashboard" },
     { 
       icon: <FiBriefcase />, 
       label: "Companies", 
