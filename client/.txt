@@ -26,3 +26,301 @@ export default {
     autoprefixer: {},
   },
 }
+
+
+
+
+
+
+
+
+
+
+########################### CHART JS (BAR CHART) #########################
+
+
+### Bar Chart Component Ko Samjhna
+
+Yeh component **React** aur **Chart.js** library use karta hai, jise `react-chartjs-2` ke through React ke saath integrate kiya gaya hai. Iska maqsad data ko bar chart ki shakal mein dikhana hai, jo attendance percentages jaisi cheezein visualize karne ke liye behtareen hai.
+
+```jsx
+import React from 'react'; // React library ko import kiya gaya hai, jo UI components banane ke liye zaroori hai.
+import { Bar } from 'react-chartjs-2'; // react-chartjs-2 se Bar component import kiya, jo Chart.js ke bar chart ko React mein use karne deta hai.
+import {
+  Chart as ChartJS, // Chart.js ki core library ko ChartJS naam diya gaya hai.
+  CategoryScale,     // X-axis (horizontal axis) par categories (jaise 'Mon', 'Tue') ko handle karta hai.
+  LinearScale,       // Y-axis (vertical axis) par numerical data (jaise 0-100%) ko handle karta hai.
+  BarElement,        // Chart mein individual bars ko represent karta hai.
+  Title,             // Chart ko title dene ke liye.
+  Tooltip,           // Jab aap bar par mouse layenge, toh data dikhane wale pop-up (tooltip) ko enable karta hai.
+  Legend,            // Chart ke legend (jaise 'Present', 'Absent' ke labels) ko manage karta hai.
+} from 'chart.js';
+
+// --- Chart.js Components Ki Registration ---
+// Yeh step bohat zaroori hai! Chart.js modular hai, is liye aap ko un components ko
+// register karna padta hai jo aap use karna chahte hain. Agar yeh register na hon,
+// toh chart sahi se render nahi hoga.
+ChartJS.register(
+  CategoryScale, // Category axis (din ke naam ke liye)
+  LinearScale,   // Linear scale (percentages ke liye)
+  BarElement,    // Bars banane ke liye
+  Title,         // Chart ka unwan (title)
+  Tooltip,       // Mouse hover par details dikhane ke liye
+  Legend         // Har bar set ka label (Present/Absent) dikhane ke liye
+);
+
+// --- BarChart React Component Ki Definition ---
+// Yeh ek functional React component hai jo 'data' naam ka ek prop (property) accept karta hai.
+const BarChart = ({ data }) => {
+  // --- Chart Options Ki Configuration ---
+  // 'options' object define karta hai ke chart kaisa dikhega aur kaise behave karega.
+  const options = {
+    responsive: true, // Chart ko apne container ke size ke mutabiq automatically resize hone deta hai.
+    maintainAspectRatio: false, // Chart ko uske original aspect ratio (height-width ka ratio) maintain karne se rokta hai, taake yeh zyada flexible tareeqe se resize ho sake.
+    plugins: { // Chart ke extra features (plugins) ko configure karta hai.
+      legend: { // Chart ke legend ki settings.
+        position: 'top', // Legend ko chart area ke upar rakhta hai.
+      },
+      // Agar aap chart ka koi title dena chahte hain toh yahan 'title' plugin add kar sakte hain:
+      // title: {
+      //   display: true,
+      //   text: 'Daily Attendance Percentage',
+      //   font: { size: 16 }
+      // }
+    },
+    scales: { // Chart ke axes (x aur y) ki properties define karta hai.
+      y: { // Y-axis (vertical axis) ki configuration, jo aam taur par numerical data ke liye hoti hai.
+        beginAtZero: true, // Yaqeen dilata hai ke Y-axis 0 se shuru ho, bar charts ke liye yeh achha hai taake misleading visuals se bacha ja sake.
+        max: 100, // Y-axis par maximum value 100 set karta hai. Percentages dikhane ke liye yeh zaroori hai.
+        ticks: { // Y-axis par labels (ticks) ki configuration.
+          callback: function(value) { // Ek function jo har Y-axis label ke text ko customize karta hai.
+            return value + '%'; // Har Y-axis label ke saath '%' ka sign add karta hai (masalan, '90' ban jata hai '90%').
+          }
+        }
+      }
+      // Agar zaroorat ho to yahan 'x' axis ki configuration bhi add kar sakte hain, masalan:
+      // x: {
+      //   grid: {
+      //     display: false // Vertical grid lines ko chhupata hai
+      //   }
+      // }
+    }
+  };
+
+  // --- Component Ka Render ---
+  // Yeh line asal Bar chart ko render karti hai.
+  return <Bar data={data} options={options} />; // 'Bar' component ko 'data' aur 'options' props pass kiye ja rahe hain.
+};
+
+export default BarChart; // Component ko export kiya gaya hai taake ise doosri files mein use kiya ja sake.
+```
+
+---
+
+### `attendanceData` Ko Samjhna (Woh Data Jo Aap Pass Karenge)
+
+Yeh woh asal data hai jo aap is `BarChart` component ko `data` prop ke taur par denge.
+
+```javascript
+  const attendanceData = {
+    // 'labels' aap ki X-axis (horizontal axis) par categories ko define karte hain.
+    // Is case mein, yeh hafte ke din hain.
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    // 'datasets' objects ka ek array hai, jahan har object data series ke ek set ko represent karta hai
+    // jo chart par display hoga.
+    datasets: [
+      {
+        label: 'Present', // Yeh label legend mein dikhega.
+        data: [92, 95, 90, 94, 93, 50], // Har label ke liye actual numerical values (masalan, Monday ko 92% present).
+        backgroundColor: '#3B82F6', // 'Present' dataset ke bars ka color (blue).
+      },
+      {
+        label: 'Absent', // Yeh label bhi legend mein dikhega.
+        data: [8, 5, 10, 6, 7, 50], // 'Absent' ke liye numerical values (masalan, Monday ko 8% absent).
+        backgroundColor: '#EF4444', // 'Absent' dataset ke bars ka color (red).
+      }
+    ]
+  };
+```
+
+---
+
+### Is `BarChart` Component Ko Kaise Use Karen?
+
+Is chart ko display karne ke liye, aap ise kisi doosre React component mein (jaise aap ke `CompanyOverviewPage.jsx` mein) use karenge aur `attendanceData` ko isko pass karenge:
+
+```jsx
+// CompanyOverviewPage.jsx ya kisi bhi doosre component mein jahan aap yeh chart dikhana chahte hain
+import React from 'react';
+import BarChart from './BarChart'; // Path ko zaroorat ke mutabiq adjust karein
+// ... doosre imports
+
+const CompanyOverviewPage = () => {
+  const attendanceData = { // Attendance ka data define kiya gaya hai
+    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    datasets: [
+      {
+        label: 'Present',
+        data: [92, 95, 90, 94, 93, 50],
+        backgroundColor: '#3B82F6',
+      },
+      {
+        label: 'Absent',
+        data: [8, 5, 10, 6, 7, 50],
+        backgroundColor: '#EF4444',
+      }
+    ]
+  };
+
+  return (
+    <div className="p-6">
+      {/* ... doosra dashboard content */}
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Daily Attendance</h2>
+      <div className="bg-white p-6 rounded-lg shadow-md h-80"> {/* Chart ko height di gayi hai */}
+        <BarChart data={attendanceData} /> {/* Yahan BarChart component ko attendanceData pass kiya gaya hai */}
+      </div>
+      {/* ... aap ke page ka baqi hissa */}
+    </div>
+  );
+};
+
+export default CompanyOverviewPage;
+```
+
+---
+
+### Mukhtasar Tareeqe Se Samjhein:
+
+* **`ChartJS.register`**: Yeh Chart.js ka zaroori setup hai jo use batata hai ke aap kis qisam ke chart elements (scales, bars, legends, tooltips) use kar rahe hain.
+* **`BarChart` component**: Yeh ek reusable React component hai jo `data` ko prop ke taur par leta hai.
+* **`options` object**: Yeh woh jagah hai jahan aap apne chart ki look aur behavior ko customize karte hain (jaise responsiveness, legend ki position, axis ki settings, waghera).
+* **`data` object**: Yeh woh asal information hai jo chart visualize karega. Is mein `labels` (categories ke liye) aur `datasets` (data ki har series ke liye, jaise 'Present' aur 'Absent' counts) shamil hain, unki values aur colors ke saath.
+* **`<Bar data={data} options={options} />`**: Yeh woh core line hai jo `react-chartjs-2` library ko use karte hue chart ko render karti hai, aap ka data aur options pass karti hai.
+
+Yeh setup aap ko different bar charts banane mein bohat aasani deta hai, sirf `data` prop ko change kar ke jo aap `BarChart` component ko pass karte hain, jab ke `options` ek consistent look aur feel maintain karti hain.
+
+Umeed hai, Waqas, yeh tafseeli tafseer aap ko samajh aa gayi hogi? Agar koi bhi hissa abhi bhi clear nahi hai, toh be-jhijhak pooch sakte hain!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################### CHART JS (PIE CHART) #########################
+
+### Pie Chart Component Ko Samjhna
+
+Yeh component bhi **React** aur **Chart.js** library use karta hai, `react-chartjs-2` ke through React mein integrated. Iska maqsad data ko **pie chart** ki shakal mein dikhana hai, jo kisi bhi cheez ki percentage distribution (jaise departments mein employees ki taqseem) dikhane ke liye behtareen hai.
+
+```jsx
+import React from 'react'; // React library ko import kiya gaya hai.
+import { Pie } from 'react-chartjs-2'; // react-chartjs-2 se Pie component import kiya, jo Chart.js ke pie chart ko React mein use karne deta hai.
+import {
+  Chart as ChartJS, // Chart.js ki core library ko ChartJS naam diya gaya hai.
+  ArcElement,        // Pie chart mein har slice (tukra) ko ArcElement kehte hain. Iski rendering ke liye zaroori hai.
+  Tooltip,           // Jab aap slice par mouse layenge, toh data dikhane wale pop-up (tooltip) ko enable karta hai.
+  Legend             // Chart ke legend (labels jaise 'Development', 'Marketing') ko manage karta hai.
+} from 'chart.js';
+
+// --- Chart.js Components Ki Registration ---
+// Yeh step bohat zaroori hai! Chart.js modular hai. Jo components aap use karna chahte hain,
+// unhein register karna lazmi hai. Iske bagair chart sahi se render nahi hoga.
+ChartJS.register(
+  ArcElement, // Pie chart ke slices ko render karne ke liye.
+  Tooltip,    // Interactive tooltips ke liye.
+  Legend      // Chart legend ke liye.
+);
+
+// --- PieChart React Component Ki Definition ---
+// Yeh ek functional React component hai jo 'data' naam ka ek prop accept karta hai.
+const PieChart = ({ data }) => {
+  // --- Chart Options Ki Configuration ---
+  // 'options' object define karta hai ke chart kaisa dikhega aur kaise behave karega.
+  const options = {
+    responsive: true, // Chart ko apne container ke size ke mutabiq automatically resize hone deta hai.
+    maintainAspectRatio: false, // Chart ko uske original aspect ratio maintain karne se rokta hai, flexible resizing ke liye.
+    plugins: { // Chart ke extra features (plugins) ko configure karta hai.
+      legend: { // Chart ke legend ki settings.
+        position: 'right', // Legend ko chart area ke right side par rakhta hai. (Bar chart mein 'top' par tha).
+      },
+      tooltip: { // Tooltip (jab mouse slice par layen) ki configuration.
+        callbacks: { // Tooltip ke content ko customize karne ke liye callbacks.
+          label: function(context) { // Yeh function define karta hai ke tooltip mein har item ka label kaise dikhega.
+            // 'context' object mein data ki details hoti hain jo current slice se related hain.
+            // 'context.label' slice ka label hai (e.g., 'Development').
+            // 'context.raw' slice ki raw value hai (e.g., 35).
+            return `${context.label}: ${context.raw}%`; // Label aur uski percentage value ko combine kar ke string banata hai (e.g., "Development: 35%").
+          }
+        }
+      }
+    }
+    // Pie charts mein aam taur par scales (axes) nahi hote, is liye yahan 'scales' object nahi hai.
+  };
+
+  // --- Component Ka Render ---
+  // Yeh line asal Pie chart ko render karti hai.
+  return <Pie data={data} options={options} />; // 'Pie' component ko 'data' aur 'options' props pass kiye ja rahe hain.
+};
+
+export default PieChart; // Component ko export kiya gaya hai taake ise doosri files mein use kiya ja sake.
+```
+
+---
+
+### `departmentDistribution` Ko Samjhna (Woh Data Jo Aap Pass Karenge)
+
+Yeh woh asal data hai jo aap is `PieChart` component ko `data` prop ke taur par denge.
+
+```javascript
+  const departmentDistribution = {
+    // 'labels' pie chart ke har slice (tukre) ke liye naam define karte hain.
+    // Yeh woh labels hain jo legend mein bhi dikhenge.
+    labels: ['Development', 'Marketing', 'HR', 'Operations', 'Finance'],
+    // 'datasets' objects ka ek array hai, pie chart mein aam taur par ek hi dataset hota hai.
+    datasets: [
+      {
+        // Pie chart mein label har slice ke liye alag hota hai, is liye yahan dataset ka koi generic 'label' nahi hota.
+        data: [35, 20, 15, 20, 10], // Har label (department) ke corresponding numerical values. Yeh values percentages represent karti hain (total 100%).
+        backgroundColor: [ // Har slice ke liye background color define kiya gaya hai.
+          '#3B82F6', // Development (blue)
+          '#10B981', // Marketing (green)
+          '#F59E0B', // HR (orange)
+          '#6366F1', // Operations (indigo/purple)
+          '#EC4899'  // Finance (pink)
+        ],
+        // Agar aap chahen to border, hover effects bhi yahan add kar sakte hain.
+      }
+    ]
+  };
+```
+
+---
+
+### In Summary:
+
+* **`ChartJS.register`**: Bar Chart ki tarah hi, yeh Pie Chart ke specific elements (ArcElement, Tooltip, Legend) ko Chart.js mein register karta hai.
+* **`PieChart` component**: Yeh ek reusable React component hai jo `data` ko prop ke taur par leta hai.
+* **`options` object**: Yeh Pie Chart ke appearance aur behavior ko control karta hai.
+    * `legend.position: 'right'` legend ko chart ke daaein (right) taraf rakhta hai.
+    * `tooltip.callbacks.label` ek custom function hai jo tooltip mein dikhne wale text ko format karta hai, taake label ke saath percentage (%) bhi dikhe.
+* **`data` object**: Yeh asal information hai jo chart visualize karega.
+    * `labels` pie chart ke sections ke naam hain.
+    * `datasets[0].data` in sections ki numerical values (percentages) hain.
+    * `datasets[0].backgroundColor` har section ke liye alag color define karta hai.
+* **`<Pie data={data} options={options} />`**: Yeh woh core line hai jo `react-chartjs-2` library ko use karte hue Pie chart ko render karti hai.
+
+Yeh Pie Chart component aap ko employees ki departments ke hisaab se taqseem (distribution) jaise data ko bohot hi clear aur colorful tareeqe se dikhane mein madad karega.
+
+Umeed hai, Waqas, yeh tafseeli tafseer aap ko samajh aa gayi hogi? Koi aur sawaal ho to zaroor poochiye ga!

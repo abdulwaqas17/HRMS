@@ -524,6 +524,7 @@ import {
 } from 'react-icons/fi';
 import InviteModal from './components/InviteModal';
 import AddCompanyModal from './components/AddCompanyModal';
+import DashboardLayout from '@/layouts/authenticate-pages/dashboard/layout';
 
 const Requests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -613,7 +614,8 @@ const Requests = () => {
   };
 
   return (
-    <div className="space-y-6">
+  <DashboardLayout title="Service Provider" short="SP">
+     <div className="space-y-6">
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -799,6 +801,7 @@ const Requests = () => {
         onSubmit={handleAddCompany}
       />
     </div>
+  </DashboardLayout> 
   );
 };
 

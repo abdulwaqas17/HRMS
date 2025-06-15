@@ -5,8 +5,9 @@ import {
 import CompaniesChart from './components/CompaniesChart';
 import RecentCompanies from './components/RecentCompanies';
 import PaymentSummary from './components/PaymentSummary';
+import DashboardLayout from '@/layouts/authenticate-pages/dashboard/layout';
 
-const Overview = () => {
+const SPDashboard = () => {
   const stats = [
     { icon: <FiBriefcase />, title: "Total Companies", value: "142", change: "+12%", trend: "up" },
     { icon: <FiDollarSign />, title: "Revenue", value: "$28,450", change: "+8.2%", trend: "up" },
@@ -15,7 +16,8 @@ const Overview = () => {
   ];
 
   return (
-    <div>
+    <DashboardLayout title="Service Provider" short="SP">
+      <div>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard Overview</h1>
       
       {/* Stats Cards */}
@@ -51,7 +53,8 @@ const Overview = () => {
         </div>
       </div>
     </div>
+    </DashboardLayout>
   );
 };
 
-export default Overview;
+export default SPDashboard;

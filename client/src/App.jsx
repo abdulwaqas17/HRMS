@@ -10,15 +10,16 @@ import {
   SignupForm,
   SignupImage,
 } from "./pages/auth/auth-provider";
-import Home from "./pages/NonAuthenticatePages/HomePage/Home";
-import DashboardLayout from "./layouts/authenticate-pages/dashboard/layout";
-import Overview from "./pages/sp-dashboard/overview";
 // import CompanyDashboard from "./pages/AuthenticatePages/CompanyDashboard/CompanyDashboard";
 // import CompOverview from "./components/CompanyDashboard/overview";
 // import HRs from "./components/CompanyDashboard/Hrs";
 import NotFoundPage from "./pages/404-page/NotFoundPage ";
 import Companies from "./pages/sp-dashboard/companies/sub-pages/registerCompanies";
 import Requests from "./pages/sp-dashboard/companies/sub-pages/requests";
+import Home from "./layouts/non-authenticate-page/home";
+import SPDashboard from "./pages/sp-dashboard/overview";
+import CompanyDashboard from "./pages/company-dashboard/overview";
+import HRDashboard from "./pages/hr-dashboard/overview";
 
 // import LoginForm from './pages/auth/Login'
 // import { SignupForm } from './pages/auth'
@@ -57,29 +58,37 @@ function App() {
 
           {/* Service Provider Dashboard Routes */}
           <Route
-            path="owner/dashboard"
+            path="sp/dashboard"
             element={
-              <DashboardLayout>
-                <Overview />
-              </DashboardLayout>
+              
+                <SPDashboard />
+              
             }
           />
           <Route
-            path="owner/companies/registered"
+            path="sp/companies/registered"
             element={
-              <DashboardLayout>
+              
                 <Companies />
-              </DashboardLayout>
+            
             }
           />
           <Route
-            path="owner/companies/requests"
+            path="sp/companies/requests"
             element={
-              <DashboardLayout>
+             
                 <Requests />
-              </DashboardLayout>
+             
             }
           />
+
+          {/* Company Dashboard Routes */}
+
+          <Route path="/company/dashboard" element={<CompanyDashboard />} />
+
+          {/* HR Dashboard Routes */}
+
+          <Route path="/hr/dashboard" element={<HRDashboard />} />
 
           {/* <Route index element={<Overview />} /> */}
           {/* <Route path="companies" element={<Companies />} />

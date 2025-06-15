@@ -1,3 +1,4 @@
+import DashboardLayout from "@/layouts/authenticate-pages/dashboard/layout";
 import React, { useState } from "react";
 import {
   FiSearch,
@@ -74,7 +75,7 @@ const Companies = () => {
   });
 
   return (
-    <>
+    <DashboardLayout title="Service Provider" short="SP">
       {/* Filters and Search */}
       <div className="mb-6 bg-white p-4 rounded-lg shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -298,7 +299,7 @@ const Companies = () => {
           </div>
         </div>
       </div>
-    </>
+    </DashboardLayout >
   );
 };
 
