@@ -1,11 +1,10 @@
-import mongoose from 'mongoose';
+let mongoose = require('mongoose');
 
 const serviceProviderSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'owner',
-    required: true,
-    unique: true // 1 service provider ka 1 owner hi hoga
+    ref: 'users',
+   
   },
   name: {
     type: String,
@@ -54,4 +53,15 @@ serviceProviderSchema.pre('save', function (next) {
   next();
 });
 
-export default mongoose.model('serviceprovider', serviceProviderSchema);
+// ⬇️ Only one document allowed check
+serviceProviderSchema.pre('save', async function (next) {
+  const count = await mongoose.models.serviceprovider.countDocuments();
+  if (count >= 1 && this.isNew) {
+    const err = new Error('Only one service provider is allowed');
+    return next(err);
+  }
+  next();
+});
+
+let serviceprovider = mongoose.model('serviceprovider', serviceProviderSchema);
+module.exports = serviceprovider;

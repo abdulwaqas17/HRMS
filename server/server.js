@@ -1,6 +1,8 @@
 let express = require('express');
 let app = express();
 require('dotenv').config();
+let spRoutes = require('./routes/service-provider/sp.routes');
+let ownerRoutes = require('./routes/owner/owner.routes');
 
 let connectDB = require('./config/db');
 let cors = require('cors');
@@ -12,6 +14,9 @@ app.use(cors());
 
 // to connect mongo db
 connectDB();
+
+app.use('/',spRoutes);
+app.use('/',ownerRoutes);
 
 const PORT = process.env.PORT || 5000;
 

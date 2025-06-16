@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+let mongoose = require('mongoose');
+
 
 const companyRequestSchema = new mongoose.Schema({
   companyName: {
@@ -46,4 +47,5 @@ const companyRequestSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.model('companyrequests', companyRequestSchema);
+let companyrequests = mongoose.model('companyrequests', companyRequestSchema);
+module.exports = companyrequests;

@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+let mongoose = require('mongoose');
+
 
 const registeredCompanySchema = new mongoose.Schema({
   companyName: {
@@ -85,4 +86,5 @@ const registeredCompanySchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.model('registeredcompanies', registeredCompanySchema);
+let registeredcompanies =  mongoose.model('registeredcompanies', registeredCompanySchema);
+module.exports = registeredcompanies;

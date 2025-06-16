@@ -1,9 +1,13 @@
-import mongoose from "mongoose";
+let mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, "Name is required"],
+    required: [true, "First name is required"],
+    trim: true,
+  },
+  lastName: {
+    type: String,
     trim: true,
   },
   email: {
@@ -112,7 +116,10 @@ const userSchema = new mongoose.Schema({
 
     gender: {
     type: String,
-    enum: ['male', 'female', 'other'],
+    enum: {
+      values : ['male', 'female', 'other'],
+      massage : 'Kindly select valid gender'
+    },
     required: [true, 'Gender is required']
   },
   dob: {
@@ -131,4 +138,5 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("User", userSchema);
+let users = mongoose.model("users", userSchema);
+module.exports = users;
