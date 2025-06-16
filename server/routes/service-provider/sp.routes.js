@@ -1,7 +1,7 @@
 let express = require('express');
-const createServiceProvider = require('../../controllers/service-provider/create-sp');
 let router = express.Router();
+const createServiceProvider = require('../../controllers/service-provider/create-sp');
 
-router.post('/sp/create',createServiceProvider)
+router.post('/create/sp',createServiceProvider)
 
 module.exports = router;

@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
         message : "Invalid role",
     },
     required: [true, "Role is required"],
+    set: v => v.toLowerCase()
   },
 
   // Only for owner
@@ -84,7 +85,7 @@ const userSchema = new mongoose.Schema({
   salary: {
     type: Number,
     min: [10000, "Salary must be at least 10,000"],
-    min: [1000000, "Salary exceeds maximum limit"],
+    max: [1000000, "Salary exceeds maximum limit"],
     validate: {
       validator: function (value) {
         return ["hr", "employee"].includes(this.role) ? value != null : true;
@@ -117,10 +118,11 @@ const userSchema = new mongoose.Schema({
     gender: {
     type: String,
     enum: {
-      values : ['male', 'female', 'other'],
+      values : ['male', 'female', 'other'], 
       massage : 'Kindly select valid gender'
     },
-    required: [true, 'Gender is required']
+    required: [true, 'Gender is required'],
+     set: v => v.toLowerCase()
   },
   dob: {
     type: Date,

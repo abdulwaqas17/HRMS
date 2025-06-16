@@ -3,6 +3,11 @@ let app = express();
 require('dotenv').config();
 let spRoutes = require('./routes/service-provider/sp.routes');
 let ownerRoutes = require('./routes/owner/owner.routes');
+let adminRoutes = require('./routes/admins/admin.routes');
+let hrRoutes = require('./routes/hrs/hr.routes');
+let employeeRoutes = require('./routes/employees/employee.routes');
+let compRequestRoute = require('./routes/companies/c-request.route');
+let compRegisterRoute = require('./routes/companies/c-register.route');
 
 let connectDB = require('./config/db');
 let cors = require('cors');
@@ -17,6 +22,11 @@ connectDB();
 
 app.use('/',spRoutes);
 app.use('/',ownerRoutes);
+app.use('/',adminRoutes);
+app.use('/',hrRoutes);
+app.use('/',employeeRoutes);
+app.use('/',compRequestRoute);
+app.use('/',compRegisterRoute);
 
 const PORT = process.env.PORT || 5000;
 

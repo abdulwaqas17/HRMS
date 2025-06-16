@@ -1,8 +1,8 @@
 let express = require('express');
+let router = express.Router();
 const createOwner = require('../../controllers/owner/create-owner');
 
-let router = express.Router();
 
-router.post('/owner/create',createOwner)
+router.post('/create/owner',createOwner)
 
 module.exports = router;

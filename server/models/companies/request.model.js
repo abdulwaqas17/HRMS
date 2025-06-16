@@ -15,10 +15,12 @@ const companyRequestSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Phone number is required']
   },
-  name : {
+
+  adminName : {
     type : String,
-    required : true
+    required : [true, 'Fisrt name is required']
   },
+
 
   industry: {
     type: String,
@@ -28,7 +30,7 @@ const companyRequestSchema = new mongoose.Schema({
     },
     required: [true, 'Industry is required']
   },
-  employeeCount: {
+  employeeRange: {
     type: Number,
     min: [1, 'Employee count must be at least 1'],
     required: [true, 'Employee count is required']
@@ -38,7 +40,7 @@ const companyRequestSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'approved', 'rejected','invited'],
+    enum: ['pending', 'registered', 'rejected','invited'],
     default: 'pending'
   },
   requestedAt: {

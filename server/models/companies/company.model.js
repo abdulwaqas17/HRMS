@@ -37,12 +37,12 @@ const registeredCompanySchema = new mongoose.Schema({
     },
     required: [true, 'Industry is required']
   },
-  employeeCount: {
+  employeeRange: {
     type: Number,
     min: [1, 'At least 1 employee is required'],
     required: [true, 'Employee count is required']
   },
-  logo: {
+  companyLogo: {
     type: String, // Cloudinary URL
     required: [true, 'Company logo is required']
   },
@@ -53,7 +53,7 @@ const registeredCompanySchema = new mongoose.Schema({
     ref: 'users',
     
   },
-  hr: [
+  hrs: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'users'
@@ -66,9 +66,12 @@ const registeredCompanySchema = new mongoose.Schema({
     }
   ],
  // Plan Info
-  subscription: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subscription',
+  subscriptionPlan: {
+    type: String,
+     enum: {
+      values: ['Premium', 'Enterprise', 'Basic'],
+      message: 'Invalid subscription plan'
+    },
     required: [true, 'Subscription is required']
   },
 //   planStartDate: {
