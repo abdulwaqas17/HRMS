@@ -1,0 +1,27 @@
+--- REMAINING ------------------
+protected routes
+db setup
+bug free code, conditons check
+jwt
+cloudinary,multer
+node mailer link send
+rander data from db on ui
+make multi right page
+nav for all 3 fix
+more features
+
+
+
+
+models
+    
+    service-provider
+       owner (ye to aik hi hoga)
+       companies
+          rigister ==> (in m register company k employee aur hr ka [] bhi hoga aur un ka data id k thorugh nichay hr aur emplyee se aye  ga, populate kr k, aur baki data ka inviation form se)
+          reqests ==> (jo company requst bhjen gi un ka kuch data)
+
+    company
+        admin ==> (jb service provider inviation form fill kr k add kr ga ya company buyer khud fill kry, ga company ki id hogi aur populate kr k data le len gy compny ka)
+        hr ==> same (admin hr add kry ga)
+        employee ==> same (hr employee add kry ga)

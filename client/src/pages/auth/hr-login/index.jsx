@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
-const LoginImage = () => {
+const HrLoginImage = () => {
   return (
 
      <div className="md:w-1/2 bg-blue-600 flex items-center justify-center p-8">
@@ -21,7 +21,7 @@ const LoginImage = () => {
   )
 }
 
-const LoginForm = () => {
+const HrLoginForm = () => {
 
   
        const [formData, setFormData] = useState({
@@ -168,5 +168,5 @@ const LoginForm = () => {
   )
 }
 
-export {LoginImage,LoginForm}
+export {HrLoginImage,HrLoginForm}
 

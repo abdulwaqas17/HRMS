@@ -1,18 +1,17 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthLayout from "./layouts/authenticate-pages/signin/layout";
 import {
+  AdminLoginForm,
+  AdminLoginImage,
   ForgotPasswordForm,
   ForgotPasswordImage,
-  LoginForm,
-  LoginImage,
+  HrLoginForm,
+  HrLoginImage,
   OtpVerifyForm,
   OtpVerifyImage,
-  SignupForm,
-  SignupImage,
+  SPLoginForm,
+  SPLoginImage,
 } from "./pages/auth/auth-provider";
-// import CompanyDashboard from "./pages/AuthenticatePages/CompanyDashboard/CompanyDashboard";
-// import CompOverview from "./components/CompanyDashboard/overview";
-// import HRs from "./components/CompanyDashboard/Hrs";
 import NotFoundPage from "./pages/404-page/NotFoundPage ";
 import Companies from "./pages/sp-dashboard/companies/sub-pages/registerCompanies";
 import Requests from "./pages/sp-dashboard/companies/sub-pages/requests";
@@ -31,14 +30,25 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
-            path="/signup"
+            path="/sp-login"
             element={
-              <AuthLayout left={<SignupImage />} right={<SignupForm />} />
+              <AuthLayout left={<SPLoginImage />} right={<SPLoginForm />} />
             }
           />
           <Route
-            path="/login"
-            element={<AuthLayout left={<LoginImage />} right={<LoginForm />} />}
+            path="/admin-login"
+            element={
+              <AuthLayout
+                left={<AdminLoginImage />}
+                right={<AdminLoginForm />}
+              />
+            }
+          />
+          <Route
+            path="/hr-login"
+            element={
+              <AuthLayout left={<HrLoginImage />} right={<HrLoginForm />} />
+            }
           />
           <Route
             path="/otp-verify"
@@ -57,30 +67,9 @@ function App() {
           />
 
           {/* Service Provider Dashboard Routes */}
-          <Route
-            path="sp/dashboard"
-            element={
-              
-                <SPDashboard />
-              
-            }
-          />
-          <Route
-            path="sp/companies/registered"
-            element={
-              
-                <Companies />
-            
-            }
-          />
-          <Route
-            path="sp/companies/requests"
-            element={
-             
-                <Requests />
-             
-            }
-          />
+          <Route path="sp/dashboard" element={<SPDashboard />} />
+          <Route path="sp/companies/registered" element={<Companies />} />
+          <Route path="sp/companies/requests" element={<Requests />} />
 
           {/* Company Dashboard Routes */}
 
