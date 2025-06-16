@@ -7,7 +7,8 @@ const AdminLoginImage = () => {
      <div className="md:w-1/2 bg-indigo-700 flex items-center justify-center p-8">
   <div className="max-w-md">
     <img 
-      src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" 
+      src="https://plus.unsplash.com/premium_photo-1661694429186-30b7224fe7ad?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzN8fGJ1c3NpbmVzfGVufDB8fDB8fHww" 
+      
       alt="Admin login" 
       className="w-full h-auto rounded-lg shadow-xl"
     />

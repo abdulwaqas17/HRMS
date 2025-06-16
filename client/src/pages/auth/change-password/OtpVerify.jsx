@@ -7,7 +7,7 @@ const OtpVerifyImage = () => {
     <div className="md:w-1/2 bg-blue-600 flex items-center justify-center p-8">
         <div className="max-w-md">
           <img 
-            src="https://images.unsplash.com/photo-1607749111659-e1c8e05f5f24?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" 
+            src="https://plus.unsplash.com/premium_photo-1681487843757-8a6d04422652?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHBhc3N3b3JkfGVufDB8fDB8fHww" 
             alt="OTP verification" 
             className="w-full h-auto rounded-lg shadow-xl"
           />

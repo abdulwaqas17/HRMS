@@ -8,7 +8,7 @@ const ForgotPasswordImage = () => {
    <div className="md:w-1/2 bg-blue-600 flex items-center justify-center p-8">
         <div className="max-w-md">
           <img 
-            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" 
+            src="https://images.unsplash.com/photo-1702390734475-d81dd8ae8fde?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGFzc3dvcmR8ZW58MHx8MHx8fDA%3D" 
             alt="Password reset" 
             className="w-full h-auto rounded-lg shadow-xl"
           />
