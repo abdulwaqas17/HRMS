@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster } from 'react-hot-toast';
 import AuthLayout from "./layouts/authenticate-pages/signin/layout";
 import {
   AdminLoginForm,
@@ -92,6 +93,16 @@ function App() {
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+             <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
       </BrowserRouter>
     </>
   );
