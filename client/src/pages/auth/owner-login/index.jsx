@@ -1,7 +1,10 @@
+import axios from 'axios';
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
 
-const SPLoginImage = () => {
+const OwnerLoginImage = () => {
   return (
 
    <div className="md:w-1/2 bg-indigo-600 flex items-center justify-center p-8">
@@ -21,7 +24,7 @@ const SPLoginImage = () => {
   )
 }
 
-const SPLoginForm = () => {
+const OwnerLoginForm = () => {
 
   
        const [formData, setFormData] = useState({
@@ -31,18 +34,44 @@ const SPLoginForm = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]:  value
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Login form submitted:', formData);
-    // Add your login logic here
-  };
+  const [loading, setLoading] = useState(false);
+   const navigate = useNavigate();
+ 
+   const handleSubmit = async (e) => {
+     e.preventDefault();
+ 
+     setLoading(true);
+ 
+     try {
+       let response = await axios.post(
+         `${import.meta.env.VITE_API_URL}/auth/login/owner`,
+         {
+           email: formData.email,
+           password: formData.password,
+         }
+       );
+ 
+       localStorage.setItem("ownerToken", response.data.token);
+       toast.success("Login successful! Redirecting...");
+       setTimeout(() => {
+         navigate("/");
+       }, 1500);
+     } catch (error) {
+       console.error("Error during login:", error);
+       const errorMessage =
+         error.response?.data?.message || "Login failed. Please try again.";
+       toast.error(errorMessage);
+     } finally {
+       setLoading(false);
+     }
+   };
 
     
   
@@ -89,7 +118,7 @@ const SPLoginForm = () => {
                   id="rememberMe"
                   name="rememberMe"
                   type="checkbox"
-                  checked={formData.rememberMe}
+                 
                   onChange={handleChange}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
@@ -110,7 +139,20 @@ const SPLoginForm = () => {
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                Sign In
+                {loading ? (
+                <div className="flex items-center">
+                  <ClipLoader
+                    color={"#ffffff"}
+                    loading={loading}
+                    size={20}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <span className="ml-2">Signing In...</span>
+                </div>
+              ) : (
+                "Sign In"
+              )}
               </button>
             </div>
           </form>
@@ -168,5 +210,5 @@ const SPLoginForm = () => {
   )
 }
 
-export {SPLoginImage,SPLoginForm}
+export {OwnerLoginImage,OwnerLoginForm}
 

@@ -74,6 +74,15 @@ const registeredCompanySchema = new mongoose.Schema({
     },
     required: [true, 'Subscription is required']
   },
+
+  status: {
+    type: String,
+     enum: {
+      values: ['suspended','active'],
+      message: 'Invalid status',
+      default : 'active'
+    }
+  },
 //   planStartDate: {
 //     type: Date,
 //     required: [true, 'Plan start date is required']

@@ -56,7 +56,7 @@
 
 import CompanySidebar from '@/components/dashboard/sidebars/CompanySidebar ';
 import HRSidebar from '@/components/dashboard/sidebars/HRSidebar';
-import ServiceProviderSidebar from '@/components/dashboard/sidebars/ServiceProviderSidebar';
+import OwnerSidebar from '@/components/dashboard/sidebars/OwnerSidebar';
 import React from 'react';
 import { FiMenu } from 'react-icons/fi';
 
@@ -70,7 +70,7 @@ const DashboardLayout = ({ children, title,short }) => {
   const renderSidebar = () => {
     switch(personRole) {
       case 'service_provider':
-        return <ServiceProviderSidebar isOpen={sidebarOpen} />;
+        return <OwnerSidebar isOpen={sidebarOpen} />;
       case 'company_admin':
         return <CompanySidebar isOpen={sidebarOpen} />;
       case 'hr_manager':

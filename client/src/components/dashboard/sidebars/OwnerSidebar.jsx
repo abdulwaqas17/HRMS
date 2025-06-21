@@ -6,26 +6,26 @@ import {
 } from 'react-icons/fi';
 import { NavLink } from 'react-router-dom';
 
-const ServiceProviderSidebar = ({ isOpen }) => {
+const OwnerSidebar = ({ isOpen }) => {
   const [companiesOpen, setCompaniesOpen] = useState(false);
   
   const navItems = [
-    { icon: <FiHome />, label: "Dashboard", path: "/sp/dashboard" },
+    { icon: <FiHome />, label: "Dashboard", path: "/owner/dashboard" },
     { 
       icon: <FiBriefcase />, 
       label: "Companies", 
-      path: "/sp/companies",
+      path: "/owner/companies",
       subItems: [
-        { label: "Registered", path: "/sp/companies/registered" },
-        { label: "Requests", path: "/sp/companies/requests" }
+        { label: "Registered", path: "/owner/companies/registered" },
+        { label: "Requests", path: "/owner/companies/requests" }
       ]
     },
-    { icon: <FiCreditCard />, label: "Payments", path: "/sp/payments" },
-    { icon: <FiPieChart />, label: "Subscriptions", path: "/sp/subscriptions" },
-    { icon: <FiHelpCircle />, label: "Support Tickets", path: "/sp/support" },
-    { icon: <FiFileText />, label: "Reports", path: "/sp/reports" },
-    { icon: <FiUsers />, label: "User Management", path: "/sp/users" },
-    { icon: <FiSettings />, label: "Settings", path: "/sp/settings" },
+    { icon: <FiCreditCard />, label: "Payments", path: "/owner/payments" },
+    { icon: <FiPieChart />, label: "Subscriptions", path: "/owner/subscriptions" },
+    { icon: <FiHelpCircle />, label: "Support Tickets", path: "/owner/support" },
+    { icon: <FiFileText />, label: "Reports", path: "/owner/reports" },
+    { icon: <FiUsers />, label: "User Management", path: "/owner/users" },
+    { icon: <FiSettings />, label: "Settings", path: "/owner/settings" },
   ];
 
   const toggleCompanies = () => {
@@ -115,4 +115,4 @@ const ServiceProviderSidebar = ({ isOpen }) => {
   );
 };
 
-export default ServiceProviderSidebar;
+export default OwnerSidebar;

@@ -1,5 +1,8 @@
 import DashboardLayout from "@/layouts/authenticate-pages/dashboard/layout";
-import React, { useState } from "react";
+import axios from "axios";
+import { format } from "date-fns";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   FiSearch,
   FiFilter,
@@ -12,73 +15,56 @@ import {
 const Companies = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
+  const [registeredCompanies, setRegisteredCompanies] = useState(null);
+
+  useEffect(() => {
+    const getRegisteredCompanies = async () => {
+      try {
+        let response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/registered-companies`
+        );
+
+        let companies = response.data.data;
+
+        setRegisteredCompanies(companies);
+
+        console.log(response.data);
+
+      } catch (error) {
+        console.log("error:", error);
+        const errorMessage =
+          error.response?.data?.message || "Fetching data failed.";
+        toast.error(errorMessage);
+      }
+    };
+
+    getRegisteredCompanies();
+  }, []);
 
   // Sample data - replace with API call
-  const companies = [
-    {
-      id: 1,
-      logo: "https://via.placeholder.com/40",
-      name: "TechSolutions PK",
-      email: "contact@tech.com",
-      owner: "Ahmed Khan",
-      employees: 42,
-      status: "active",
-      joined: "2023-05-15",
-      subscription: "Premium",
-    },
-    {
-      id: 2,
-      logo: "https://via.placeholder.com/40",
-      name: "MediCare Ltd",
-      email: "info@medicare.com",
-      owner: "Fatima Ahmed",
-      employees: 120,
-      status: "suspended",
-      joined: "2023-04-22",
-      subscription: "Enterprise",
-    },
-    {
-      id: 3,
-      logo: "https://via.placeholder.com/40",
-      name: "TechSolutions PK",
-      email: "contact@tech.com",
-      owner: "Ahmed Khan",
-      employees: 42,
-      status: "active",
-      joined: "2023-05-15",
-      subscription: "Premium",
-    },
-    {
-      id: 4,
-      logo: "https://via.placeholder.com/40",
-      name: "MediCare Ltd",
-      email: "info@medicare.com",
-      owner: "Fatima Ahmed",
-      employees: 120,
-      status: "active",
-      joined: "2023-04-22",
-      subscription: "Enterprise",
-    },
-    {
-      id: 5,
-      logo: "https://via.placeholder.com/40",
-      name: "LiveTech Ltd",
-      email: "info@livetech.com",
-      owner: "Shahzaib Ahmed",
-      employees: 120,
-      status: "suspended",
-      joined: "2023-04-22",
-      subscription: "Enterprise",
-    },
-    // ... more companies
-  ];
+  // const companies = [
+  //   {
+  //     id: 1,
+  //     CompanyLogo: "https://via.placeholder.com/40",
+  //     name: "TechSolutions PK",
+  //     email: "contact@tech.com",
+  //     owner: "Ahmed Khan",
+  //     employees: 42,
+  //     status: "active",
+  //     joined: "2023-05-15",
+  //     subscriptionPlan: "Premium",
+  //   },
+  
+  //   // ... more companies
+  // ];
 
   // Filter companies based on search and filter
-  const filteredCompanies = companies.filter((company) => {
+  const filteredCompanies = registeredCompanies?.filter((company) => {
+    let companyAdmin = company.admin.firstName + " " + company.admin.lastName;
     const matchesSearch =
-      company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      company.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      company.owner.toLowerCase().includes(searchTerm.toLowerCase());
+      company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      company.companyEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      companyAdmin.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesFilter = filter === "all" || company.status === filter;
 
@@ -113,7 +99,7 @@ const Companies = () => {
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
-                <option value="pending">Pending</option>
+                
                 <option value="suspended">Suspended</option>
               </select>
             </div>
@@ -160,7 +146,7 @@ const Companies = () => {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Subscription
+                  subscriptionPlan
                 </th>
                 <th
                   scope="col"
@@ -177,33 +163,33 @@ const Companies = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredCompanies.map((company) => (
+              {filteredCompanies ?  filteredCompanies.map((company) => (
                 <tr key={company.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
                         <img
                           className="h-10 w-10 rounded-full"
-                          src={company.logo}
-                          alt={company.name}
+                          src={company.CompanyLogo}
+                          alt={company.CompanyName}
                         />
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {company.name}
+                          {company.CompanyName}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {company.email}
+                          {company.CompanyEmail}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{company.owner}</div>
+                    <div className="text-sm text-gray-900">{company.admin.firstName + " " +company.admin.lastName}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {company.employees}
+                      {company.employees.length}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -222,18 +208,18 @@ const Companies = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
-                        company.subscription === "Premium"
+                        company.subscriptionPlan === "Premium"
                           ? "bg-purple-100 text-purple-800"
-                          : company.subscription === "Enterprise"
+                          : company.subscriptionPlan === "Enterprise"
                           ? "bg-blue-100 text-blue-800"
                           : "bg-gray-100 text-gray-800"
                       }`}
                     >
-                      {company.subscription}
+                      {company.subscriptionPlan}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {company.joined}
+                    {format(company.createdAt, 'MMM d, yyyy')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end space-x-2">
@@ -258,7 +244,7 @@ const Companies = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )): 'Loading ...'}
             </tbody>
           </table>
         </div>
@@ -268,9 +254,9 @@ const Companies = () => {
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">1</span> to{" "}
-                <span className="font-medium">10</span> of{" "}
-                <span className="font-medium">{companies.length}</span> results
+                Showing <span className="font-medium">1</span> to
+                <span className="font-medium">10</span> of
+                <span className="font-medium">  {registeredCompanies?.length}</span> results
               </p>
             </div>
             <div>
@@ -310,7 +296,7 @@ const Companies = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout >
+    </DashboardLayout>
   );
 };
 

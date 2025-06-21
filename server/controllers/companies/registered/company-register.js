@@ -1,7 +1,7 @@
 // controllers/companyRequests/createCompanyRequest.js
 const mongoose = require("mongoose");
-const CompanyRegister = require("../../models/companies/company.model");
-const CompanyRequest = require("../../models/companies/request.model");
+const CompanyRegister = require("../../../models/companies/company.model");
+const CompanyRequest = require("../../../models/companies/request.model");
 
 // Controller to handle company request creation
 const createCompanyRegister = async (req, res) => {
@@ -73,6 +73,7 @@ const createCompanyRegister = async (req, res) => {
       companyCountry,
       companyAddress,
       subscriptionPlan,
+      
     });
 
     // Step 4: Save to DB

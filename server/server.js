@@ -7,8 +7,8 @@ let ownerRoutes = require('./routes/owner/owner.routes');
 let adminRoutes = require('./routes/admins/admin.routes');
 let hrRoutes = require('./routes/hrs/hr.routes');
 let employeeRoutes = require('./routes/employees/employee.routes');
-let compRequestRoute = require('./routes/companies/c-request.route');
-let compRegisterRoute = require('./routes/companies/c-register.route');
+let compRequestRoute = require('./routes/companies/requests/c-request.route');
+let compRegisterRoute = require('./routes/companies/registered/c-register.route');
 let connectDB = require('./config/db');
 let cors = require('cors');
 

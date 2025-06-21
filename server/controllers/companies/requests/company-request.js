@@ -1,7 +1,7 @@
 // controllers/companyRequests/createCompanyRequest.js
 
-const CompanyRequest = require('../../models/companies/request.model');
-const { isValidEmail, isValidPhone } = require('../../utils/validations');
+const CompanyRequest = require('../../../models/companies/request.model');
+const { isValidEmail, isValidPhone } = require('../../../utils/validations');
 
 // Controller to handle company request creation
 const createCompanyRequest = async (req, res) => {

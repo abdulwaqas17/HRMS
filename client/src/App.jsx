@@ -10,14 +10,14 @@ import {
   HrLoginImage,
   OtpVerifyForm,
   OtpVerifyImage,
-  SPLoginForm,
-  SPLoginImage,
+  OwnerLoginForm,
+  OwnerLoginImage,
 } from "./pages/auth/auth-provider";
 import NotFoundPage from "./pages/404-page/NotFoundPage ";
 import Companies from "./pages/sp-dashboard/companies/sub-pages/registerCompanies";
 import Requests from "./pages/sp-dashboard/companies/sub-pages/requests";
 import Home from "./layouts/non-authenticate-page/home";
-import SPDashboard from "./pages/sp-dashboard/overview";
+import OwnerDashboard from "./pages/sp-dashboard/overview";
 import CompanyDashboard from "./pages/company-dashboard/overview";
 import HRDashboard from "./pages/hr-dashboard/overview";
 
@@ -31,9 +31,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
-            path="/sp-login"
+            path="/owner-login"
             element={
-              <AuthLayout left={<SPLoginImage />} right={<SPLoginForm />} />
+              <AuthLayout left={<OwnerLoginImage />} right={<OwnerLoginForm />} />
             }
           />
           <Route
@@ -68,9 +68,9 @@ function App() {
           />
 
           {/* Service Provider Dashboard Routes */}
-          <Route path="sp/dashboard" element={<SPDashboard />} />
-          <Route path="sp/companies/registered" element={<Companies />} />
-          <Route path="sp/companies/requests" element={<Requests />} />
+          <Route path="owner/dashboard" element={<OwnerDashboard />} />
+          <Route path="owner/companies/registered" element={<Companies />} />
+          <Route path="owner/companies/requests" element={<Requests />} />
 
           {/* Company Dashboard Routes */}
 
@@ -96,11 +96,8 @@ function App() {
              <Toaster
         position="top-center"
         toastOptions={{
-          duration: 5000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
+          duration: 2000
+         
         }}
       />
       </BrowserRouter>

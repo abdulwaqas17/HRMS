@@ -7,7 +7,7 @@ import RecentCompanies from './components/RecentCompanies';
 import PaymentSummary from './components/PaymentSummary';
 import DashboardLayout from '@/layouts/authenticate-pages/dashboard/layout';
 
-const SPDashboard = () => {
+const OwnerDashboard = () => {
   const stats = [
     { icon: <FiBriefcase />, title: "Total Companies", value: "142", change: "+12%", trend: "up" },
     { icon: <FiDollarSign />, title: "Revenue", value: "$28,450", change: "+8.2%", trend: "up" },
@@ -57,4 +57,4 @@ const SPDashboard = () => {
   );
 };
 
-export default SPDashboard;
+export default OwnerDashboard;
