@@ -20,6 +20,7 @@ import Home from "./layouts/non-authenticate-page/home";
 import OwnerDashboard from "./pages/sp-dashboard/overview";
 import CompanyDashboard from "./pages/company-dashboard/overview";
 import HRDashboard from "./pages/hr-dashboard/overview";
+import CompanyRegister from "./pages/register-pages/CompanyRegister";
 
 // import LoginForm from './pages/auth/Login'
 // import { SignupForm } from './pages/auth'
@@ -91,6 +92,7 @@ function App() {
           {/* <Route path="/company-dashboard" element={<CompanyDashboard><CompOverview/></CompanyDashboard>}/>
            <Route path="/company-dashboard/hrs" element={<CompanyDashboard><HRs/></CompanyDashboard>}/> */}
 
+          <Route path="/company-invite/:id" element={<CompanyRegister />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
              <Toaster

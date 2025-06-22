@@ -17,6 +17,24 @@ const registeredCompanySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Phone number is required']
   },
+  industry: {
+    type: String,
+    enum: {
+      values: ['IT', 'Finance', 'Healthcare', 'Education', 'Manufacturing', 'Retail', 'Construction'],
+      message: 'Industry must be valid'
+    },
+    required: [true, 'Industry is required']
+  },
+ employeeRange: {
+    type: String,
+    enum: ['1-10','11-50','51-100','101-200','200+'],
+    required: [true, 'Employee Range is required']
+  },
+  
+  companyLogo: {
+    type: String, // Cloudinary URL
+    required: [true, 'Company logo is required']
+  },
   companyAddress: {
     type: String,
     required: [true, 'Address is required']
@@ -29,24 +47,24 @@ const registeredCompanySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Country is required']
   },
-  industry: {
+  // Plan Info
+  subscriptionPlan: {
+    type: String,
+     enum: {
+      values: ['Premium', 'Enterprise', 'Basic'],
+      message: 'Invalid subscription plan'
+    },
+    required: [true, 'Subscription is required']
+  },
+
+  status: {
     type: String,
     enum: {
-      values: ['IT', 'Finance', 'Healthcare', 'Education', 'Manufacturing', 'Retail', 'Construction'],
-      message: 'Industry must be valid'
-    },
-    required: [true, 'Industry is required']
+      values: ['suspended','active'],
+      message: 'Invalid status',
+      default : 'active'
+    }
   },
-  employeeRange: {
-    type: Number,
-    min: [1, 'At least 1 employee is required'],
-    required: [true, 'Employee count is required']
-  },
-  companyLogo: {
-    type: String, // Cloudinary URL
-    required: [true, 'Company logo is required']
-  },
-  
   // company register krty waqt hi admin ka sara data len gy
  admin: {
     type: mongoose.Schema.Types.ObjectId,
@@ -65,24 +83,6 @@ const registeredCompanySchema = new mongoose.Schema({
      ref: 'users'
     }
   ],
- // Plan Info
-  subscriptionPlan: {
-    type: String,
-     enum: {
-      values: ['Premium', 'Enterprise', 'Basic'],
-      message: 'Invalid subscription plan'
-    },
-    required: [true, 'Subscription is required']
-  },
-
-  status: {
-    type: String,
-     enum: {
-      values: ['suspended','active'],
-      message: 'Invalid status',
-      default : 'active'
-    }
-  },
 //   planStartDate: {
 //     type: Date,
 //     required: [true, 'Plan start date is required']
@@ -92,7 +92,7 @@ const registeredCompanySchema = new mongoose.Schema({
 //     required: [true, 'Plan end date is required']
 //   },
 
-  createdAt: {
+  registerAt: {
     type: Date,
     default: Date.now
   }

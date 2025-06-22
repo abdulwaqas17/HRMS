@@ -17,6 +17,8 @@ import DashboardLayout from "@/layouts/authenticate-pages/dashboard/layout";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 const Requests = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,31 +27,33 @@ const Requests = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
-   const [companiesRequest, setCompaniesRequest] = useState(null);
-  
-    useEffect(() => {
-      const getCompaniesRequest = async () => {
-        try {
-          let response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/companies-request`
-          );
-  
-          let companies = response.data.data;
-  
-          setCompaniesRequest(companies);
-  
-          console.log(response.data);
-  
-        } catch (error) {
-          console.log("error:", error);
-          const errorMessage =
-            error.response?.data?.message || "Fetching data failed.";
-          toast.error(errorMessage);
-        }
-      };
-  
-      getCompaniesRequest();
-    }, []);
+  const [companiesRequest, setCompaniesRequest] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getCompaniesRequest = async () => {
+      try {
+        let response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/companies-request`
+        );
+
+        let companies = response.data.data;
+
+        setCompaniesRequest(companies);
+
+        console.log(response.data);
+      } catch (error) {
+        console.log("error:", error);
+        const errorMessage =
+          error.response?.data?.message || "Fetching data failed.";
+        toast.error(errorMessage);
+      }
+    };
+
+    getCompaniesRequest();
+  }, []);
 
   // // Sample data - replace with API calls
   // const [requests, setRequests] = useState([
@@ -86,7 +90,7 @@ const Requests = () => {
 
   const handleReject = (id) => {
     console.log(id);
-    
+
     setCompaniesRequest(
       companiesRequest.map((req) =>
         req._id === id ? { ...req, status: "rejected" } : req
@@ -94,20 +98,73 @@ const Requests = () => {
     );
   };
 
-  const handleInvite = (inviteData) => {
-    // API call to send invitation
-    console.log(
-      "Sending invitation to:",
-      selectedRequest.companyEmail,
-      "with data:",
-      inviteData
-    );
-    setCompaniesRequest(
-      companiesRequest.map((req) =>
-        req.id === selectedRequest.id ? { ...req, status: "invited" } : req
-      )
-    );
-    setShowInviteModal(false);
+  console.log(selectedRequest, "selectedRequest");
+
+  const handleInvite = async (inviteData) => {
+    let ownerToken = localStorage.getItem("ownerToken");
+    if (!ownerToken) {
+      toast.error("Owner token not found, Login Fisrt");
+
+      setTimeout(() => {
+        navigate("/owner-login");
+      }, 1500);
+      return;
+    }
+    if (!selectedRequest) {
+      toast.error("No company selected to invite.");
+      return;
+    }
+
+    console.log(inviteData);
+    console.log(inviteData.emailBody);
+
+    try {
+      setLoading(true);
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/company-invite/${selectedRequest._id}`,
+        {
+          email: selectedRequest.companyEmail,
+          emailSubject: inviteData.emailSubject,
+          emailBody: inviteData.emailBody,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${ownerToken}`,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success(
+          response.data.message ||
+            `Invite sent to ${selectedRequest.companyName} successfully`
+        );
+
+        setCompaniesRequest(
+          companiesRequest.map((req) =>
+            req._id === selectedRequest._id
+              ? { ...req, status: "invited" }
+              : req
+          )
+        );
+        setShowInviteModal(false);
+      } else {
+        toast.error(response.data.message || "Something went wrong.");
+      }
+    } catch (error) {
+      console.error("Invite error:", error);
+      const errorMessage =
+        error.response?.data?.message || "Invite failed. Please try again.";
+      toast.error(errorMessage);
+      if (errorMessage === "Unauthorized" || "Invalid Token") {
+        setTimeout(() => {
+          navigate("/owner-login");
+        }, 1500);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAddCompany = (companyData) => {
@@ -116,9 +173,23 @@ const Requests = () => {
     setShowAddModal(false);
   };
 
-  const refreshData = () => {
-    // API call to refresh data
-    console.log("Refreshing data...");
+  const refreshData = async () => {
+     try {
+        let response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/companies-request`
+        );
+
+        let companies = response.data.data;
+
+        setCompaniesRequest(companies);
+
+        console.log(response.data);
+      } catch (error) {
+        console.log("error:", error);
+        const errorMessage =
+          error.response?.data?.message || "Fetching data failed.";
+        toast.error(errorMessage);
+      }
   };
 
   return (
@@ -137,11 +208,25 @@ const Requests = () => {
 
           <div className="flex space-x-3">
             <button
+              disabled={loading}
               onClick={refreshData}
-              className="flex items-center bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
-            >
-              <FiRefreshCw className="mr-2" />
-              Refresh
+              className=" bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+            >{loading ? (
+                <div className="flex items-center">
+                  <ClipLoader
+                    color={"#ffffff"}
+                    loading={loading}
+                    size={20}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <span className="ml-2">Refreashing ...</span>
+                </div>
+              ) : (
+                <span className="flex items-center"><FiRefreshCw className="mr-2" /> Refreash</span>
+              )}
+              
+              
             </button>
             <button
               onClick={() => setShowAddModal(true)}
@@ -269,8 +354,8 @@ const Requests = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center">
                           <FiClock className="mr-1 text-gray-400" />
-                        
-                          {format(request.requestedAt, 'MMM d, yyyy')}
+
+                          {format(request.requestedAt, "MMM d, yyyy")}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -339,7 +424,8 @@ const Requests = () => {
           isOpen={showInviteModal}
           onClose={() => setShowInviteModal(false)}
           request={selectedRequest}
-        
+          onSubmit={handleInvite}
+          loading={loading}
         />
 
         {/* Add Company Modal */}

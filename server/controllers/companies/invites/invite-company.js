@@ -1,13 +1,32 @@
 const nodemailer = require("nodemailer");
+const CompanyRequest = require("../../../models/companies/request.model");
+const { default: mongoose } = require("mongoose");
 
 const sendInvite = async (req, res) => {
   try {
-    const { email, subject, body } = req.body;
+    console.log("req.params.id", req.params.id);
 
-    console.log(email, subject, body);
-    
+    let companyId = req.params.id;
 
-    if (!email || !subject || !body) {
+    if (!mongoose.Types.ObjectId.isValid(companyId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Company ID" });
+    }
+
+    let isCompanyReq = await CompanyRequest.findById(companyId);
+
+    if (!isCompanyReq) {
+      return res.status(404).json({
+        success: false,
+        message: "Company not found",
+      });
+    }
+    const { email, emailSubject, emailBody } = req.body;
+
+    console.log(email, emailSubject, emailBody);
+
+    if (!email || !emailSubject || !emailBody) {
       return res.status(400).json({
         success: false,
         message: "Missing required fields (email, subject, body)",
@@ -32,9 +51,12 @@ const sendInvite = async (req, res) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: subject,
-      html: body,
+      subject: emailSubject,
+      html: emailBody,
     });
+
+    isCompanyReq.status = 'invited';
+    await isCompanyReq.save();
 
     return res.status(200).json({
       success: true,

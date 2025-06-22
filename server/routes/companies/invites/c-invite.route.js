@@ -5,7 +5,7 @@ const authorizeRoles = require('../../../middlewares/authorize-roles.md');
 let router = express.Router();
 
 
-router.post('/company-invite',verifyToken ,authorizeRoles('owner') ,sendInvite)
+router.post('/company-invite/:id',verifyToken ,authorizeRoles('owner') ,sendInvite)
 
 
 module.exports = router;
