@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FiSearch,
   FiFilter,
@@ -14,6 +14,9 @@ import {
 import InviteModal from "./components/InviteModal";
 import AddCompanyModal from "./components/AddCompanyModal";
 import DashboardLayout from "@/layouts/authenticate-pages/dashboard/layout";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { format } from "date-fns";
 
 const Requests = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,49 +25,53 @@ const Requests = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
 
-  // Sample data - replace with API calls
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      companyName: "EduSoft Solutions",
-      contactPerson: "Bilal Ahmed",
-      email: "bilal@edusoft.com",
-      phone: "+92 300 1234567",
-      employeeCount: "15-20",
-      requestedOn: "2023-07-15",
-      status: "pending",
-      message: "Interested in your HRMS for our growing team",
-    },
-    {
-      id: 2,
-      companyName: "BuildIt Constructions",
-      contactPerson: "Sara Khan",
-      email: "sara@buildit.com",
-      phone: "+92 321 9876543",
-      employeeCount: "50-100",
-      requestedOn: "2023-07-12",
-      status: "pending",
-      message: "Need system for our construction workers",
-    },
-    {
-      id: 3,
-      companyName: "FoodExpress",
-      contactPerson: "Ali Raza",
-      email: "ali@foodexpress.com",
-      phone: "+92 345 6789012",
-      employeeCount: "30-50",
-      requestedOn: "2023-07-10",
-      status: "rejected",
-      message: "Looking for HR solution for our delivery staff",
-    },
-  ]);
+   const [companiesRequest, setCompaniesRequest] = useState(null);
+  
+    useEffect(() => {
+      const getCompaniesRequest = async () => {
+        try {
+          let response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/companies-request`
+          );
+  
+          let companies = response.data.data;
+  
+          setCompaniesRequest(companies);
+  
+          console.log(response.data);
+  
+        } catch (error) {
+          console.log("error:", error);
+          const errorMessage =
+            error.response?.data?.message || "Fetching data failed.";
+          toast.error(errorMessage);
+        }
+      };
+  
+      getCompaniesRequest();
+    }, []);
+
+  // // Sample data - replace with API calls
+  // const [requests, setRequests] = useState([
+  //   {
+  //     id: 1,
+  //     companyName: "EduSoft Solutions",
+  //     adminName: "Bilal Ahmed",
+  //     companyEmail: "bilal@edusoft.com",
+  //     companyPhone: "+92 300 1234567",
+  //     employeeRange: "15-20",
+  //     requestedAt: "2023-07-15",
+  //     status: "pending",
+  //     message: "Interested in your HRMS for our growing team",
+  //   }
+  // ]);
 
   // Filter requests
-  const filteredRequests = requests.filter((request) => {
+  const filteredRequests = companiesRequest?.filter((request) => {
     const matchesSearch =
       request.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.contactPerson.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.email.toLowerCase().includes(searchTerm.toLowerCase());
+      request.adminName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      request.companyEmail.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesFilter = filter === "all" || request.status === filter;
 
@@ -78,9 +85,11 @@ const Requests = () => {
   };
 
   const handleReject = (id) => {
-    setRequests(
-      requests.map((req) =>
-        req.id === id ? { ...req, status: "rejected" } : req
+    console.log(id);
+    
+    setCompaniesRequest(
+      companiesRequest.map((req) =>
+        req._id === id ? { ...req, status: "rejected" } : req
       )
     );
   };
@@ -89,12 +98,12 @@ const Requests = () => {
     // API call to send invitation
     console.log(
       "Sending invitation to:",
-      selectedRequest.email,
+      selectedRequest.companyEmail,
       "with data:",
       inviteData
     );
-    setRequests(
-      requests.map((req) =>
+    setCompaniesRequest(
+      companiesRequest.map((req) =>
         req.id === selectedRequest.id ? { ...req, status: "invited" } : req
       )
     );
@@ -221,7 +230,7 @@ const Requests = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredRequests.length > 0 ? (
+                {filteredRequests?.length > 0 ? (
                   filteredRequests.map((request) => (
                     <tr key={request.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -234,7 +243,7 @@ const Requests = () => {
                               {request.companyName}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {request.email}
+                              {request.companyEmail}
                             </div>
                           </div>
                         </div>
@@ -246,21 +255,22 @@ const Requests = () => {
                           </div>
                           <div className="ml-3">
                             <div className="text-sm text-gray-900">
-                              {request.contactPerson}
+                              {request.adminName}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {request.phone}
+                              {request.companyPhone}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {request.employeeCount}
+                        {request.employeeRange}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center">
                           <FiClock className="mr-1 text-gray-400" />
-                          {request.requestedOn}
+                        
+                          {format(request.requestedAt, 'MMM d, yyyy')}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -288,7 +298,7 @@ const Requests = () => {
                                 <FiCheck className="h-5 w-5" />
                               </button>
                               <button
-                                onClick={() => handleReject(request.id)}
+                                onClick={() => handleReject(request._id)}
                                 className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50"
                                 title="Reject"
                               >
@@ -329,7 +339,7 @@ const Requests = () => {
           isOpen={showInviteModal}
           onClose={() => setShowInviteModal(false)}
           request={selectedRequest}
-          onSubmit={handleInvite}
+        
         />
 
         {/* Add Company Modal */}
