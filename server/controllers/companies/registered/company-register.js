@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const CompanyRegister = require("../../../models/companies/company.model");
 const CompanyRequest = require("../../../models/companies/request.model");
+const cloudinary = require("../../../config/cloudinary");
 
 // Controller to handle company request creation
 const createCompanyRegister = async (req, res) => {
@@ -19,13 +20,14 @@ const createCompanyRegister = async (req, res) => {
     let isCompanyReq = await CompanyRequest.findById(companyReqId);
 
     if (!isCompanyReq) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "Company not found",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "Company not found",
+      });
     }
+
+    console.log(req.body);
+    console.log(req.file);
 
     // Step 1: Extract data from request body
     const {
@@ -35,7 +37,6 @@ const createCompanyRegister = async (req, res) => {
 
       industry,
       employeeRange,
-      companyLogo,
       companyCity,
       companyCountry,
       companyAddress,
@@ -43,22 +44,57 @@ const createCompanyRegister = async (req, res) => {
     } = req.body;
 
     // Step 2: Optional - Backend validation before mongoose (double-check frontend)
-    if (
-      !companyName ||
-      !companyEmail ||
-      !companyPhone ||
-      !industry ||
-      !employeeRange ||
-      !companyLogo ||
-      !companyAddress ||
-      !companyCity ||
-      !companyCountry ||
-      !subscriptionPlan
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Please fill all required fields",
-      });
+    // if (
+    //   !companyName ||
+    //   !companyEmail ||
+    //   !companyPhone ||
+    //   !industry ||
+    //   !employeeRange ||
+    //   !companyLogo ||
+    //   !companyAddress ||
+    //   !companyCity ||
+    //   !companyCountry ||
+    //   !subscriptionPlan
+    // ) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Please fill all required fields",
+    //   });
+    // }
+    const requiredFields = [
+      "companyName",
+      "companyEmail",
+      "companyPhone",
+      "industry",
+      "employeeRange",
+      "companyAddress",
+      "companyCity",
+      "companyCountry",
+      "subscriptionPlan",
+    ];
+
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({
+          success: false,
+          message: `${field} is required`,
+        });
+      }
+    }
+
+    if (req.file) {
+      try {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "HRMS",
+        });
+        var logo = result.secure_url;
+      } catch (uploadError) {
+        return res.status(500).json({
+          success: false,
+          message: "Failed to upload logo",
+          error: uploadError.message,
+        });
+      }
     }
 
     // Step 3: Create new request document
@@ -68,12 +104,11 @@ const createCompanyRegister = async (req, res) => {
       companyPhone,
       industry,
       employeeRange,
-      companyLogo,
+      companyLogo: logo,
       companyCity,
       companyCountry,
       companyAddress,
       subscriptionPlan,
-      
     });
 
     // Step 4: Save to DB

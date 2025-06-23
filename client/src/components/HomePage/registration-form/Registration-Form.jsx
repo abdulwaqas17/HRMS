@@ -216,11 +216,11 @@ const RegistrationForm = () => {
                 className="w-4 h-4"
               />
               <label htmlFor="terms" className="ml-2 text-gray-700">
-                I agree to the{" "}
+                I agree to the
                 <a href="#" className="text-blue-600 underline">
                   Terms
-                </a>{" "}
-                and{" "}
+                </a>
+                and
                 <a href="#" className="text-blue-600 underline">
                   Privacy
                 </a>

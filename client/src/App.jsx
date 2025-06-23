@@ -93,6 +93,7 @@ function App() {
            <Route path="/company-dashboard/hrs" element={<CompanyDashboard><HRs/></CompanyDashboard>}/> */}
 
           <Route path="/company-invite/:id" element={<CompanyRegister />} />
+          <Route path="/not-found" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
              <Toaster

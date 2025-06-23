@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .input {
-  @apply w-full border border-gray-300 rounded-md px-4 py-2 focus:ring focus:ring-blue-500;
+  @apply w-full border border-gray-300 rounded-md px-4 py-2 focus:ring focus:ring-blue-500 bg-red-400;
 }
 .input-disabled {
   @apply input bg-gray-100 text-gray-500;

@@ -60,7 +60,7 @@ const Companies = () => {
 
   // Filter companies based on search and filter
   const filteredCompanies = registeredCompanies?.filter((company) => {
-    let companyAdmin = company.admin.firstName + " " + company.admin.lastName;
+    let companyAdmin = company.admin ? company.admin.firstName + " " + company.admin.lastName : 'Admin name';
     const matchesSearch =
       company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       company.companyEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -70,6 +70,7 @@ const Companies = () => {
 
     return matchesSearch && matchesFilter;
   });
+console.log(filteredCompanies);
 
   return (
     <DashboardLayout title="Service Provider" short="SP">
@@ -170,22 +171,22 @@ const Companies = () => {
                       <div className="flex-shrink-0 h-10 w-10">
                         <img
                           className="h-10 w-10 rounded-full"
-                          src={company.CompanyLogo}
-                          alt={company.CompanyName}
+                          src={company.companyLogo}
+                          alt={company.companyName}
                         />
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {company.CompanyName}
+                          {company.companyName}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {company.CompanyEmail}
+                          {company.companyEmail}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{company.admin.firstName + " " +company.admin.lastName}</div>
+                    <div className="text-sm text-gray-900">{company.admin ? company.admin.firstName + " " + company.admin.lastName : 'Admin name'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
@@ -212,6 +213,8 @@ const Companies = () => {
                           ? "bg-purple-100 text-purple-800"
                           : company.subscriptionPlan === "Enterprise"
                           ? "bg-blue-100 text-blue-800"
+                          : company.subscriptionPlan === "Standard"
+                          ? "bg-orange-100 text-orange-800"
                           : "bg-gray-100 text-gray-800"
                       }`}
                     >
@@ -219,7 +222,7 @@ const Companies = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {format(company.createdAt, 'MMM d, yyyy')}
+                    {format(company.registerAt, 'MMM d, yyyy')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end space-x-2">

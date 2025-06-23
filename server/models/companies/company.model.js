@@ -51,7 +51,7 @@ const registeredCompanySchema = new mongoose.Schema({
   subscriptionPlan: {
     type: String,
      enum: {
-      values: ['Premium', 'Enterprise', 'Basic'],
+      values: ['Premium', 'Enterprise', 'Basic','Standard'],
       message: 'Invalid subscription plan'
     },
     required: [true, 'Subscription is required']
@@ -62,8 +62,8 @@ const registeredCompanySchema = new mongoose.Schema({
     enum: {
       values: ['suspended','active'],
       message: 'Invalid status',
-      default : 'active'
-    }
+    },
+    default : 'active'
   },
   // company register krty waqt hi admin ka sara data len gy
  admin: {

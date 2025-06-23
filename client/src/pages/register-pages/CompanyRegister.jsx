@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 
@@ -10,6 +10,7 @@ const CompanyRegister = () => {
   const [companyData, setCompanyData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -17,7 +18,7 @@ const CompanyRegister = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      subscriptionPlan: "basic",
+      subscriptionPlan: "Basic",
     },
   });
 
@@ -31,8 +32,9 @@ const CompanyRegister = () => {
         setCompanyData(data.data);
       } catch (error) {
         toast.error(
-          error?.response?.data?.message || "Failed to load company info."
+          error?.response?.data?.message || "Company not found"
         );
+        navigate("/not-found")
       } finally {
         setIsLoading(false);
       }
@@ -54,16 +56,27 @@ const CompanyRegister = () => {
       formData.append("companyPhone", companyData.companyPhone);
       formData.append("industry", companyData.industry);
       formData.append("employeeRange", companyData.employeeRange);
-      formData.append("companyOwner", companyData.companyOwner);
+      formData.append("adminName", companyData.adminName);
 
-      // Editable form fields
-      Object.entries(formInput).forEach(([key, value]) => {
+        // Editable fields (non-file)
+    Object.entries(formInput).forEach(([key, value]) => {
+      if (key !== "companyLogo") {
         formData.append(key, value);
-      });
+      }
+    });
+
+    console.log(formInput);
+    console.log(formInput.companyLogo);
+    
+
+    // File field (must be separate!)
+    if (formInput.companyLogo?.[0]) {
+      formData.append("companyLogo", formInput.companyLogo[0]);
+    }
 
       // POST request
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/company-register`,
+        `${import.meta.env.VITE_API_URL}/company-register/${id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -71,6 +84,7 @@ const CompanyRegister = () => {
       );
 
       toast.success("Company registered successfully!");
+      navigate("/");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Registration failed.");
     } finally {
@@ -125,7 +139,7 @@ const CompanyRegister = () => {
           />
           <input
             disabled
-            value={companyData?.companyOwner}
+            value={companyData?.adminName}
             className="input-disabled"
           />
         </div>
@@ -179,22 +193,12 @@ const CompanyRegister = () => {
 
         <div>
           <label className="label">Subscription Plan</label>
-          <select
-            {...register("subscriptionPlan", {
-              required: "Subscription Plan is required",
-            })}
-            className="input"
-          >
-            <option value="basic">Basic</option>
-            <option value="standard">Standard</option>
-            <option value="premium">Premium</option>
-            <option value="enterprise">Enterprise</option>
+          <select {...register("subscriptionPlan")} className="input">
+            <option value="Basic">Basic</option>
+            <option value="Standard">Standard</option>
+            <option value="Premium">Premium</option>
+            <option value="Enterprise">Enterprise</option>
           </select>
-          {errors.subscriptionPlan && (
-            <p className="text-red-600 text-sm mt-1">
-              {errors.subscriptionPlan.message}
-            </p>
-          )}
         </div>
 
         <div>
@@ -205,14 +209,15 @@ const CompanyRegister = () => {
               required: "Company logo is required",
               validate: {
                 acceptedFormats: (fileList) =>
-                  ["image/jpeg", "image/png"].includes(fileList?.[0]?.type) ||
-                  "Only PNG/JPG allowed",
+                  ["image/jpeg", "image/png", "image/jpg"].includes(
+                    fileList?.[0]?.type
+                  ) || "Only PNG/JPG/JPEG allowed",
                 fileSize: (fileList) =>
                   fileList?.[0]?.size <= 5 * 1024 * 1024 || "Max size is 5MB",
               },
             })}
-            accept="image/png, image/jpeg"
-            className="hidden"
+            accept="image/png, image/jpeg , image/jpg"
+            className="input"
           />
           {errors.companyLogo && (
             <p className="mt-1 text-sm text-red-600">
@@ -226,7 +231,20 @@ const CompanyRegister = () => {
           disabled={isSubmitting}
           className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
         >
-          {isSubmitting ? "Submitting..." : "Complete Registration"}
+          {isSubmitting ? (
+            <div className="flex items-center">
+              <ClipLoader
+                color={"#ffffff"}
+                loading={isSubmitting}
+                size={20}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+              <span className="ml-2">Submitting...</span>
+            </div>
+          ) : (
+            "Complete Registration"
+          )}
         </button>
       </form>
     </div>

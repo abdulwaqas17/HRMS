@@ -10,7 +10,7 @@ const getCompanyRequest = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Invalid Company ID",
-        path: "/"
+        path: "/not-found"
       });
     }
 
@@ -21,7 +21,7 @@ const getCompanyRequest = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "Company not found",
-        path: "/"
+        path: "/not-found"
       });
     }
 
