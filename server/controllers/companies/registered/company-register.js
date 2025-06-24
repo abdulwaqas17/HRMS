@@ -1,40 +1,30 @@
 // controllers/companyRequests/createCompanyRequest.js
 const mongoose = require("mongoose");
+const nodemailer = require("nodemailer");
 const CompanyRegister = require("../../../models/companies/company.model");
 const CompanyRequest = require("../../../models/companies/request.model");
 const cloudinary = require("../../../config/cloudinary");
 
-// Controller to handle company request creation
+// Controller to handle company registration from request
 const createCompanyRegister = async (req, res) => {
   try {
-    console.log("req.params.id", req.params.id);
+    const { id: companyReqId } = req.params;
 
-    let companyReqId = req.params.id;
-
+    // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(companyReqId)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid Company ID" });
+      return res.status(400).json({ success: false, message: "Invalid Company ID" });
     }
 
-    let isCompanyReq = await CompanyRequest.findById(companyReqId);
-
-    if (!isCompanyReq) {
-      return res.status(404).json({
-        success: false,
-        message: "Company not found",
-      });
+    const existingRequest = await CompanyRequest.findById(companyReqId);
+    if (!existingRequest) {
+      return res.status(404).json({ success: false, message: "Company request not found" });
     }
 
-    console.log(req.body);
-    console.log(req.file);
-
-    // Step 1: Extract data from request body
+    // Destructure request body
     const {
       companyName,
       companyEmail,
       companyPhone,
-
       industry,
       employeeRange,
       companyCity,
@@ -43,24 +33,7 @@ const createCompanyRegister = async (req, res) => {
       subscriptionPlan,
     } = req.body;
 
-    // Step 2: Optional - Backend validation before mongoose (double-check frontend)
-    // if (
-    //   !companyName ||
-    //   !companyEmail ||
-    //   !companyPhone ||
-    //   !industry ||
-    //   !employeeRange ||
-    //   !companyLogo ||
-    //   !companyAddress ||
-    //   !companyCity ||
-    //   !companyCountry ||
-    //   !subscriptionPlan
-    // ) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Please fill all required fields",
-    //   });
-    // }
+    // Required fields validation
     const requiredFields = [
       "companyName",
       "companyEmail",
@@ -75,29 +48,22 @@ const createCompanyRegister = async (req, res) => {
 
     for (const field of requiredFields) {
       if (!req.body[field]) {
-        return res.status(400).json({
-          success: false,
-          message: `${field} is required`,
-        });
+        return res.status(400).json({ success: false, message: `${field} is required` });
       }
     }
 
+    // Upload logo if provided
+    let logo = "";
     if (req.file) {
       try {
-        const result = await cloudinary.uploader.upload(req.file.path, {
-          folder: "HRMS",
-        });
-        var logo = result.secure_url;
+        const result = await cloudinary.uploader.upload(req.file.path, { folder: "HRMS" });
+        logo = result.secure_url;
       } catch (uploadError) {
-        return res.status(500).json({
-          success: false,
-          message: "Failed to upload logo",
-          error: uploadError.message,
-        });
+        return res.status(500).json({ success: false, message: "Failed to upload logo", error: uploadError.message });
       }
     }
 
-    // Step 3: Create new request document
+    // Create new company registration
     const newCompanyRegister = new CompanyRegister({
       companyName,
       companyEmail,
@@ -111,17 +77,47 @@ const createCompanyRegister = async (req, res) => {
       subscriptionPlan,
     });
 
-    // Step 4: Save to DB
     await newCompanyRegister.save();
 
-    // Step 5: Send response
+    // Delete request after successful registration
+    await CompanyRequest.findByIdAndDelete(companyReqId);
+
+    // Send admin registration link via email
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      return res.status(500).json({ success: false, message: "Email credentials not configured" });
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const registerLink = `http://localhost:5173/admin-register/${newCompanyRegister._id}`;
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: companyEmail,
+      subject: `Create admin account for ${companyName}`,
+      html: `
+        <p>Dear ${existingRequest.adminName || "Admin"},</p>
+        <p>We're pleased to inform you that your company has been successfully registered.</p>
+        <p>You can now create an admin account to access your dashboard.</p>
+        <p><a href="${registerLink}" target="_blank">Click here to register</a></p>
+        <p>Best regards,<br/>HRPro Team</p>
+      `,
+    });
+
     return res.status(201).json({
       success: true,
       message: "Company registered successfully",
       data: newCompanyRegister,
+      link: registerLink,
     });
   } catch (error) {
-    console.error("Error creating company request:", error.message);
+    console.error("Error in company registration:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",

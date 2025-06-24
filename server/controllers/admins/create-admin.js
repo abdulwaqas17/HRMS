@@ -3,6 +3,7 @@ let mongoose = require("mongoose");
 const User = require("../../models/roles/user.model");
 const CompanyRegister = require("../../models/companies/company.model");
 const { isValidEmail, isValidPhone } = require("../../utils/validations");
+const cloudinary = require("../../config/cloudinary");
 
 // POST /api/admin/create
 const createAdmin = async (req, res) => {
@@ -34,19 +35,11 @@ const createAdmin = async (req, res) => {
       password,
       gender,
       dob,
-      company,
+      profileImage,
     } = req.body;
 
     // ✅ 1. Field level validation
-    if (
-      !firstName ||
-      !email ||
-      !phone ||
-      !password ||
-      !gender ||
-      !dob ||
-      !company
-    ) {
+    if (!firstName || !email || !phone || !password || !gender || !dob) {
       return res.status(400).json({
         success: false,
         message: "All required fields must be provided",
@@ -90,7 +83,28 @@ const createAdmin = async (req, res) => {
     // ✅ 7. Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ 8. Create Admin User
+    console.log('req.file =>',req.file);
+    
+    // ✅ 8 Upload logo if provided
+    let img = "";
+    if (req.file) {
+      try {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "HRMS",
+        });
+        img = result.secure_url;
+      } catch (uploadError) {
+        return res
+          .status(500)
+          .json({
+            success: false,
+            message: "Failed to upload logo",
+            error: uploadError.message,
+          });
+      }
+    }
+
+    // ✅ 9. Create Admin User
     const admin = new User({
       firstName,
       lastName,
@@ -100,12 +114,13 @@ const createAdmin = async (req, res) => {
       role: "admin",
       gender,
       dob,
-      company,
+      profileImage : img,
+      company: isCompanyRegister._id,
     });
 
     await admin.save();
 
-    //also add hr in company
+    //✅ also add hr in company
     isCompanyRegister.admin = admin._id;
     await isCompanyRegister.save();
 

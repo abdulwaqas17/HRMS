@@ -21,6 +21,7 @@ import OwnerDashboard from "./pages/sp-dashboard/overview";
 import CompanyDashboard from "./pages/company-dashboard/overview";
 import HRDashboard from "./pages/hr-dashboard/overview";
 import CompanyRegister from "./pages/register-pages/CompanyRegister";
+import AdminRegister from "./pages/register-pages/AdminRegister";
 
 // import LoginForm from './pages/auth/Login'
 // import { SignupForm } from './pages/auth'
@@ -93,6 +94,7 @@ function App() {
            <Route path="/company-dashboard/hrs" element={<CompanyDashboard><HRs/></CompanyDashboard>}/> */}
 
           <Route path="/company-invite/:id" element={<CompanyRegister />} />
+          <Route path="/admin-register/:id" element={<AdminRegister />} />
           <Route path="/not-found" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

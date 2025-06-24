@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const CompanyRequest = require('../../../models/companies/request.model');
+const RegisterCompany = require('../../../models/companies/company.model');
 
-const getCompanyRequest = async (req, res) => {
+const getRegisteredCompany = async (req, res) => {
   const { id: companyId } = req.params;
 
   try {
@@ -15,9 +15,9 @@ const getCompanyRequest = async (req, res) => {
     }
 
     // Find company request
-    const companyRequest = await CompanyRequest.findById(companyId);
+    const isCompany = await RegisterCompany.findById(companyId);
 
-    if (!companyRequest) {
+    if (!isCompany) {
       return res.status(404).json({
         success: false,
         message: "Company not found",
@@ -25,11 +25,11 @@ const getCompanyRequest = async (req, res) => {
       });
     }
 
-    // Return company request
+    // Return register company
     return res.status(200).json({
       success: true,
-      data: companyRequest,
-      message: "Company request fetched successfully"
+      data: isCompany,
+      message: "Register company fetched successfully"
     });
 
   } catch (error) {
@@ -41,4 +41,4 @@ const getCompanyRequest = async (req, res) => {
   }
 };
 
-module.exports = getCompanyRequest;
+module.exports = getRegisteredCompany;
