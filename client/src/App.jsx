@@ -14,14 +14,15 @@ import {
   OwnerLoginImage,
 } from "./pages/auth/auth-provider";
 import NotFoundPage from "./pages/404-page/NotFoundPage ";
-import Companies from "./pages/sp-dashboard/companies/sub-pages/registerCompanies";
-import Requests from "./pages/sp-dashboard/companies/sub-pages/requests";
+import Companies from "./pages/owner-dashboard/companies/sub-pages/registerCompanies";
+import Requests from "./pages/owner-dashboard/companies/sub-pages/requests";
 import Home from "./layouts/non-authenticate-page/home";
-import OwnerDashboard from "./pages/sp-dashboard/overview";
-import CompanyDashboard from "./pages/company-dashboard/overview";
+import OwnerDashboard from "./pages/owner-dashboard/overview";
+import CompanyDashboard from "./pages/admin-dashboard/overview";
 import HRDashboard from "./pages/hr-dashboard/overview";
 import CompanyRegister from "./pages/register-pages/CompanyRegister";
 import AdminRegister from "./pages/register-pages/AdminRegister";
+import Hrs from "./pages/admin-dashboard/hrs";
 
 // import LoginForm from './pages/auth/Login'
 // import { SignupForm } from './pages/auth'
@@ -74,9 +75,10 @@ function App() {
           <Route path="owner/companies/registered" element={<Companies />} />
           <Route path="owner/companies/requests" element={<Requests />} />
 
-          {/* Company Dashboard Routes */}
 
-          <Route path="/company/dashboard" element={<CompanyDashboard />} />
+          {/* Company Dashboard Routes */}
+          <Route path="/admin/dashboard" element={<CompanyDashboard />} />
+          <Route path="/admin/hrs" element={<Hrs />} />
 
           {/* HR Dashboard Routes */}
 

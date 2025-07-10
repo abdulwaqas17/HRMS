@@ -12,7 +12,7 @@ import {
   FiSettings,
 } from "react-icons/fi";
 
-const CompanySidebar = ({ isOpen }) => {
+const AdminSidebar = ({ isOpen }) => {
   const [activeSubmenu, setActiveSubmenu] = useState("");
 
   const toggleSubmenu = (menu) => {
@@ -26,12 +26,12 @@ const CompanySidebar = ({ isOpen }) => {
       }`}
     >
         <div className="flex items-center justify-center h-16 border-b border-gray-200">
-        <h1 className="text-xl font-bold text-blue-600">Company Dashboard</h1>
+        <h1 className="text-xl font-bold text-blue-600">Admin Dashboard</h1>
       </div>
       <nav className="mt-6">
         {/* Dashboard */}
         <NavLink
-          to="/company/dashboard"
+          to="/admin/dashboard"
           className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600"
         >
           <FiHome className="mr-3" />
@@ -57,13 +57,13 @@ const CompanySidebar = ({ isOpen }) => {
           {activeSubmenu === "hr" && (
             <div className="pl-12">
               <NavLink
-                to="/company/hrs"
+                to="/admin/hrs"
                 className="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50"
               >
                 All HRs
               </NavLink>
               <NavLink
-                to="/company/hrs/add"
+                to="/admin/hrs/add"
                 className="block px-4 py-2 text-sm text-gray-600 hover:bg-blue-50"
               >
                 Add New HR
@@ -74,7 +74,7 @@ const CompanySidebar = ({ isOpen }) => {
 
         {/* Employees */}
         <NavLink
-          to="/company/employees"
+          to="/admin/employees"
           className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600"
         >
           <FiUser className="mr-3" />
@@ -87,4 +87,4 @@ const CompanySidebar = ({ isOpen }) => {
   );
 };
 
-export default CompanySidebar;
+export default AdminSidebar;

@@ -54,26 +54,26 @@
 
 // export default DashboardLayout;
 
-import CompanySidebar from '@/components/dashboard/sidebars/CompanySidebar ';
+import AdminSidebar from '@/components/dashboard/sidebars/AdminSidebar ';
 import HRSidebar from '@/components/dashboard/sidebars/HRSidebar';
 import OwnerSidebar from '@/components/dashboard/sidebars/OwnerSidebar';
-import React from 'react';
+import React, { useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
 
 
 const DashboardLayout = ({ children, title,short }) => {
  
-  const [sidebarOpen, setSidebarOpen] = React.useState(true);
-  localStorage.setItem('role','service_provider');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  localStorage.setItem('role','owner');
   let personRole = localStorage.getItem('role');
 
   const renderSidebar = () => {
     switch(personRole) {
-      case 'service_provider':
+      case 'owner':
         return <OwnerSidebar isOpen={sidebarOpen} />;
-      case 'company_admin':
-        return <CompanySidebar isOpen={sidebarOpen} />;
-      case 'hr_manager':
+      case 'admin':
+        return <AdminSidebar isOpen={sidebarOpen} />;
+      case 'hr':
         return <HRSidebar isOpen={sidebarOpen} />;
       default:
         return null;

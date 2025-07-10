@@ -35,7 +35,7 @@ const OwnerSidebar = ({ isOpen }) => {
   return (
     <div className={`fixed inset-y-0 left-0 bg-white shadow-lg w-64 transition-all duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className="flex items-center justify-center h-16 border-b border-gray-200">
-        <h1 className="text-xl font-bold text-blue-600">HRMS Admin</h1>
+        <h1 className="text-xl font-bold text-blue-600">Owner Dashboard</h1>
       </div>
       
       <nav className="mt-6">

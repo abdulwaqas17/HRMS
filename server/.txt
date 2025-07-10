@@ -10,12 +10,14 @@ rander data from db on ui ✅
 make multi right page
 nav for all 3 fix
 more features
-
+https://smarthr.co.in/demo/html/template/employees
 
 9 - 10  = 0
-10 - 11 = 3
-11 - 12 = 5
-12 - 1  =
+10 - 11 = 0
+11 - 12 = 2
+12 - 1  = 
+
+
 
 
 
