@@ -1,38 +1,85 @@
 const nodemailer = require("nodemailer");
-const CompanyRequest = require("../../../models/companies/request.model");
-const { default: mongoose } = require("mongoose");
+const CompanyRequest = require("../../../models/companies/req-company.model");
+const RegCompany = require("../../../models/companies/reg-company.model");
+const { isValidPhone, isValidEmail } = require("../../../utils/validations");
 
-const sendInvite = async (req, res) => {
+const inviteCompany = async (req, res) => {
   try {
-    console.log("req.params.id", req.params.id);
+    // Step 1: Extract data from request body
+    const {
+      companyName,
+      companyEmail,
+      companyPhone,
+      adminName,
+      industry,
+      employeeRange,
+    } = req.body;
 
-    let companyId = req.params.id;
-
-    if (!mongoose.Types.ObjectId.isValid(companyId)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid Company ID" });
-    }
-
-    let isCompanyReq = await CompanyRequest.findById(companyId);
-
-    if (!isCompanyReq) {
-      return res.status(404).json({
-        success: false,
-        message: "Company not found",
-      });
-    }
-    const { email, emailSubject, emailBody } = req.body;
-
-    console.log(email, emailSubject, emailBody);
-
-    if (!email || !emailSubject || !emailBody) {
+    // Step 2: Validate required fields
+    if (
+      !companyName ||
+      !companyEmail ||
+      !companyPhone ||
+      !adminName ||
+      !industry ||
+      !employeeRange
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Missing required fields (email, subject, body)",
+        message: "Please fill all required fields",
       });
     }
 
+    // Step 3: Format Validations
+    if (!isValidEmail(companyEmail)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email format (e.g., you@example.com)",
+      });
+    }
+
+    if (!isValidPhone(companyPhone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid phone number (e.g., include +92)",
+      });
+    }
+
+    // Step 4: Check if company already exists (by name or email)
+    const isDuplicateName =
+      (await CompanyRequest.exists({ companyName })) ||
+      (await RegCompany.exists({ companyName }));
+
+    if (isDuplicateName) {
+      return res.status(409).json({
+        success: false,
+        message: "A company with this name already exists",
+      });
+    }
+
+    const isDuplicateEmail =
+      (await CompanyRequest.exists({ companyEmail })) ||
+      (await RegCompany.exists({ companyEmail }));
+
+    if (isDuplicateEmail) {
+      return res.status(409).json({
+        success: false,
+        message: "A company with this email already exists",
+      });
+    }
+
+    // Step 5: Save the new company request
+    const newRequest = await CompanyRequest.create({
+      companyName,
+      companyEmail,
+      companyPhone,
+      adminName,
+      industry,
+      employeeRange,
+      status: "invited",
+    });
+
+    // Step 6: Send Email Invitation
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
       return res.status(500).json({
         success: false,
@@ -48,19 +95,25 @@ const sendInvite = async (req, res) => {
       },
     });
 
-    await transporter.sendMail({
+    const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: email,
-      subject: emailSubject,
-      html: emailBody,
-    });
+      to: companyEmail,
+      subject: `Invitation to join HRPro - ${companyName}`,
+      html: `
+        <p>Dear ${adminName || "Admin"},</p>
+        <p>We're pleased to invite you to join our HR management platform.</p>
+        <p>Please click the link below to complete your registration:</p>
+        <p><a href="http://localhost:5173/company-invite/${newRequest._id}" target="_blank">Click here to register</a></p>
+        <p>Best regards,<br/>HRPro Team</p>
+      `,
+    };
 
-    isCompanyReq.status = 'invited';
-    await isCompanyReq.save();
+    await transporter.sendMail(mailOptions);
 
+    // Step 7: Success response
     return res.status(200).json({
       success: true,
-      message: "Email invitation sent successfully",
+      message: "Company invited successfully. Email has been sent.",
     });
   } catch (error) {
     console.error("Error in inviting company:", error.message);
@@ -72,4 +125,4 @@ const sendInvite = async (req, res) => {
   }
 };
 
-module.exports = sendInvite;
+module.exports = inviteCompany;

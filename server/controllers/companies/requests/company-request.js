@@ -1,7 +1,8 @@
 // controllers/companyRequests/createCompanyRequest.js
 
-const CompanyRequest = require('../../../models/companies/request.model');
-const { isValidEmail, isValidPhone } = require('../../../utils/validations');
+const CompanyRequest = require("../../../models/companies/req-company.model");
+const RegCompany = require("../../../models/companies/reg-company.model");
+const { isValidEmail, isValidPhone } = require("../../../utils/validations");
 
 // Controller to handle company request creation
 const createCompanyRequest = async (req, res) => {
@@ -32,16 +33,44 @@ const createCompanyRequest = async (req, res) => {
       });
     }
 
-       // 📧 Email format check
+    // Email format check
     if (!isValidEmail(companyEmail)) {
-      return res.status(400).json({ success: false, message: 'Invalid email format (e.g., you@example.com)' });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Invalid email format (e.g., you@example.com)",
+        });
     }
 
-    // 📱 Phone format check
+    //  Phone format check
     if (!isValidPhone(companyPhone)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid phone number (include country code, e.g., +92...)',
+        message: "Invalid phone number (include country code, e.g., +92...)",
+      });
+    }
+
+    // Check if company already exists (by name or email)
+    const isDuplicateName =
+      (await CompanyRequest.exists({ companyName })) ||
+      (await RegCompany.exists({ companyName }));
+
+    if (isDuplicateName) {
+      return res.status(409).json({
+        success: false,
+        message: "A company with this name already exists",
+      });
+    }
+
+    const isDuplicateEmail =
+      (await CompanyRequest.exists({ companyEmail })) ||
+      (await RegCompany.exists({ companyEmail }));
+
+    if (isDuplicateEmail) {
+      return res.status(409).json({
+        success: false,
+        message: "A company with this email already exists",
       });
     }
 
@@ -54,7 +83,6 @@ const createCompanyRequest = async (req, res) => {
       industry,
       employeeRange,
       message, // Optional
-    
     });
 
     // Step 4: Save to DB
@@ -64,9 +92,8 @@ const createCompanyRequest = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Company request submitted successfully",
-      data: newRequest
+      data: newRequest,
     });
-
   } catch (error) {
     console.error("Error creating company request:", error.message);
     return res.status(500).json({

@@ -30,6 +30,7 @@ const Requests = () => {
   const [companiesRequest, setCompaniesRequest] = useState(null);
 
   const [loading, setLoading] = useState(false);
+  const [submiting, setSubmiting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -167,29 +168,59 @@ const Requests = () => {
     }
   };
 
-  const handleAddCompany = (companyData) => {
-    // API call to add company manually
-    console.log("Adding company:", companyData);
-    setShowAddModal(false);
+  const handleAddCompany = async (data) => {
+    console.log(data);
+
+    try {
+      setSubmiting(true);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/company-invite`,
+        {
+          companyName: data.companyName,
+          companyEmail: data.companyEmail,
+          companyPhone: data.companyPhone,
+          adminName: data.adminName,
+          industry: data.industry,
+          employeeRange: data.employeeRange,
+        }
+      );
+
+      toast.success(response.data.message || "Invite Company Successfully");
+      reset();
+    } catch (error) {
+      console.error("Invite error:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
+    } finally {
+      setSubmiting(false);
+      setShowAddModal(false);
+    }
   };
 
   const refreshData = async () => {
-     try {
-        let response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/companies-request`
-        );
+    try {
+      setLoading(true);
+      let response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/companies-request`
+      );
 
-        let companies = response.data.data;
+      let companies = response.data.data;
 
-        setCompaniesRequest(companies);
+      toast.success(response.data.message);
 
-        console.log(response.data);
-      } catch (error) {
-        console.log("error:", error);
-        const errorMessage =
-          error.response?.data?.message || "Fetching data failed.";
-        toast.error(errorMessage);
-      }
+      setCompaniesRequest(companies);
+
+      console.log(response.data);
+    } catch (error) {
+      console.log("error:", error);
+      const errorMessage =
+        error.response?.data?.message || "Fetching data failed.";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -211,7 +242,8 @@ const Requests = () => {
               disabled={loading}
               onClick={refreshData}
               className=" bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
-            >{loading ? (
+            >
+              {loading ? (
                 <div className="flex items-center">
                   <ClipLoader
                     color={"#ffffff"}
@@ -223,10 +255,10 @@ const Requests = () => {
                   <span className="ml-2">Refreashing ...</span>
                 </div>
               ) : (
-                <span className="flex items-center"><FiRefreshCw className="mr-2" /> Refreash</span>
+                <span className="flex items-center">
+                  <FiRefreshCw className="mr-2" /> Refreash
+                </span>
               )}
-              
-              
             </button>
             <button
               onClick={() => setShowAddModal(true)}
@@ -433,6 +465,7 @@ const Requests = () => {
           isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
           onSubmit={handleAddCompany}
+          isSubmiting={submiting}
         />
       </div>
     </DashboardLayout>

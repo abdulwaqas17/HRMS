@@ -20,7 +20,7 @@ const registeredCompanySchema = new mongoose.Schema({
   industry: {
     type: String,
     enum: {
-      values: ['IT', 'Finance', 'Healthcare', 'Education', 'Manufacturing', 'Retail', 'Construction'],
+      values: ['IT', 'Finance', 'Healthcare', 'Education', 'Manufacturing', 'Other'],
       message: 'Industry must be valid'
     },
     required: [true, 'Industry is required']
@@ -71,16 +71,10 @@ const registeredCompanySchema = new mongoose.Schema({
     ref: 'users',
     
   },
-  hrs: [
+  users: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'users'
-    }
-  ],
-  employees: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-     ref: 'users'
     }
   ],
 //   planStartDate: {

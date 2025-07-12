@@ -1,8 +1,8 @@
 // controllers/companyRequests/createCompanyRequest.js
 const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
-const CompanyRegister = require("../../../models/companies/company.model");
-const CompanyRequest = require("../../../models/companies/request.model");
+const CompanyRegister = require("../../../models/companies/reg-company.model");
+const CompanyRequest = require("../../../models/companies/req-company.model");
 const cloudinary = require("../../../config/cloudinary");
 
 // Controller to handle company registration from request

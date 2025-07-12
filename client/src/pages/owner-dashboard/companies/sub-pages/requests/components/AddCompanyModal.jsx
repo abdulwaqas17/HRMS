@@ -8,8 +8,9 @@ import {
   FiPhone,
   FiUsers,
 } from "react-icons/fi";
+import { ClipLoader } from "react-spinners";
 
-const AddCompanyModal = ({ isOpen, onClose, onSubmit }) => {
+const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
   const {
     register,
     handleSubmit,
@@ -135,6 +136,28 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
+              Indurty
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FiUsers className="text-gray-400" />
+              </div>
+              <select
+                {...register("industry")}
+                className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="IT">IT</option>
+                <option value="Finance">Finance</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Education">Education</option>
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Employee Count
             </label>
             <div className="relative">
@@ -147,9 +170,9 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit }) => {
               >
                 <option value="1-10">1-10 Employees</option>
                 <option value="11-50">11-50 Employees</option>
-                <option value="51-200">51-200 Employees</option>
-                <option value="201-500">201-500 Employees</option>
-                <option value="500+">500+ Employees</option>
+                <option value="51-100">51-100 Employees</option>
+                <option value="101-200">101-200 Employees</option>
+                <option value="200+">200+ Employees</option>
               </select>
             </div>
           </div>
@@ -166,7 +189,20 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit }) => {
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
-              Add Company
+              {isSubmiting ? (
+                <div className="flex items-center">
+                  <ClipLoader
+                    color={"#ffffff"}
+                    loading={loading}
+                    size={20}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <span className="ml-2">Adding Company ...</span>
+                </div>
+              ) : (
+                "Add Company"
+              )}
             </button>
           </div>
         </form>

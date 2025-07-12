@@ -1,4 +1,4 @@
-const CompanyRequestModel = require("../../../models/companies/request.model");
+const CompanyRequestModel = require("../../../models/companies/req-company.model");
 
 let getCompaniesRequest = async (req, res) => {
   try {

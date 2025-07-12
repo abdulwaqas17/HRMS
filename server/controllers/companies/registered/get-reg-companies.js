@@ -1,4 +1,4 @@
-const CompanyRegister = require("../../../models/companies/company.model");
+const CompanyRegister = require("../../../models/companies/reg-company.model");
 
 let getRegisteredCompanies = async (req, res) => {
   try {

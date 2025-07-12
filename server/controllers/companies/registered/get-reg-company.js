@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const RegisterCompany = require('../../../models/companies/company.model');
+const RegisterCompany = require('../../../models/companies/reg-company.model');
 
 const getRegisteredCompany = async (req, res) => {
   const { id: companyId } = req.params;

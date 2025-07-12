@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 let mongoose = require("mongoose");
 const User = require("../../models/roles/user.model");
-const CompanyRegister = require("../../models/companies/company.model");
+const CompanyRegister = require("../../models/companies/reg-company.model");
 const { isValidEmail, isValidPhone } = require("../../utils/validations");
 const cloudinary = require("../../config/cloudinary");
 
@@ -61,7 +61,7 @@ const createAdmin = async (req, res) => {
     }
 
     // ✅ 5. Check if email already exists
-    const isEmailExists = await User.findOne({ email });
+    const isEmailExists = await CompanyRegister.findOne({ email });
     if (isEmailExists) {
       return res.status(409).json({
         success: false,
@@ -69,10 +69,7 @@ const createAdmin = async (req, res) => {
       });
     }
     // ✅ 6. Check if admin of this company already exists
-    const isAdminExists = await User.findOne({
-      company: companyId,
-      role: "admin",
-    });
+    const isAdminExists = await CompanyRegister.findOne({role: "admin"});
     if (isAdminExists) {
       return res.status(409).json({
         success: false,
@@ -83,8 +80,8 @@ const createAdmin = async (req, res) => {
     // ✅ 7. Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    console.log('req.file =>',req.file);
-    
+    console.log("req.file =>", req.file);
+
     // ✅ 8 Upload logo if provided
     let img = "";
     if (req.file) {
@@ -94,13 +91,11 @@ const createAdmin = async (req, res) => {
         });
         img = result.secure_url;
       } catch (uploadError) {
-        return res
-          .status(500)
-          .json({
-            success: false,
-            message: "Failed to upload logo",
-            error: uploadError.message,
-          });
+        return res.status(500).json({
+          success: false,
+          message: "Failed to upload logo",
+          error: uploadError.message,
+        });
       }
     }
 
@@ -114,7 +109,7 @@ const createAdmin = async (req, res) => {
       role: "admin",
       gender,
       dob,
-      profileImage : img,
+      profileImage: img,
       company: isCompanyRegister._id,
     });
 

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const CompanyRequest = require('../../../models/companies/request.model');
+const CompanyRequest = require('../../../models/companies/req-company.model');
 
 const getCompanyRequest = async (req, res) => {
   const { id: companyId } = req.params;

@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("../../models/roles/user.model"); // HR model
-const Company = require("../../models/companies/company.model");
+const RegCompany = require("../../models/companies/reg-company.model");
 const { isValidEmail, isValidPhone } = require("../../utils/validations");
 
 const addHR = async (req, res) => {
@@ -13,6 +13,14 @@ const addHR = async (req, res) => {
       .status(400)
       .json({ success: false, message: "Invalid Company ID" });
   }
+
+     // ✅ Check if company exists
+    const companyExists = await RegCompany.findById(companyId);
+    if (!companyExists) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Company not found" });
+    }
 
   try {
     const {
@@ -61,20 +69,13 @@ const addHR = async (req, res) => {
     }
 
     // ✅ Check if email already exists
-    const alreadyExists = await User.findOne({ email });
+    const alreadyExists = await RegCompany.findOne({ email });
     if (alreadyExists) {
       return res
         .status(400)
         .json({ success: false, message: "Email already registered" });
     }
 
-    // ✅ Check if company exists
-    const companyExists = await Company.findById(company);
-    if (!companyExists) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Company not found" });
-    }
 
     // ✅ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -98,7 +99,7 @@ const addHR = async (req, res) => {
     await newHR.save();
     
     //also add hr in company
-    companyExists.hrs.push(newHR._id);
+    companyExists.users.push(newHR._id);
     await companyExists.save();
 
 
