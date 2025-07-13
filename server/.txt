@@ -18,6 +18,8 @@ https://smarthr.co.in/demo/html/template/employees
 12 - 1  = 
 
 
+11 == 70%
+
 
 
 

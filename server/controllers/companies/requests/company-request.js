@@ -12,7 +12,7 @@ const createCompanyRequest = async (req, res) => {
       companyName,
       companyEmail,
       companyPhone,
-      adminName,
+      companyAdmin,
       industry,
       employeeRange,
       message,
@@ -23,7 +23,7 @@ const createCompanyRequest = async (req, res) => {
       !companyName ||
       !companyEmail ||
       !companyPhone ||
-      !adminName ||
+      !companyAdmin ||
       !industry ||
       !employeeRange
     ) {
@@ -79,7 +79,7 @@ const createCompanyRequest = async (req, res) => {
       companyName,
       companyEmail,
       companyPhone,
-      adminName,
+      companyAdmin,
       industry,
       employeeRange,
       message, // Optional
@@ -127,7 +127,7 @@ const RegistrationForm = () => {
           companyName: data.companyName,
           companyEmail: data.companyEmail,
           companyPhone: data.companyPhone,
-          adminName: data.adminName,
+          companyAdmin: data.companyAdmin,
           industry: data.industry,
           employeeRange: parseInt(data.employeeRange),
           message: data.message || '',
@@ -192,11 +192,11 @@ const RegistrationForm = () => {
                 <label className="block text-gray-700 mb-2">Contact Person Name</label>
                 <input
                   type="text"
-                  {...register('adminName', { required: true })}
+                  {...register('companyAdmin', { required: true })}
                   className="w-full px-4 py-2 border rounded-lg"
                   placeholder="Full name"
                 />
-                {errors.adminName && <p className="text-red-500 text-sm">Admin name is required</p>}
+                {errors.companyAdmin && <p className="text-red-500 text-sm">Admin name is required</p>}
               </div>
 
               <div>

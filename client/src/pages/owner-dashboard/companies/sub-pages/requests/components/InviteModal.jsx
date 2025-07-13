@@ -17,7 +17,7 @@ const InviteModal = ({ isOpen, onClose, request, onSubmit , loading}) => {
   } = useForm({
     defaultValues: {
       emailSubject: `Invitation to join HRPro - ${request?.companyName || ""}`,
-      emailBody: `Dear ${request?.adminName || "Admin"},\n\nWe're pleased to invite you to join our HR management platform. Please click the link below to complete your registration.\n\nRegistration Link: [http://localhost:5173/company-invite/${request?._id}]\n\nBest regards,\nHRPro Team`,
+      emailBody: `Dear ${request?.companyAdmin || "Admin"},\n\nWe're pleased to invite you to join our HR management platform. Please click the link below to complete your registration.\n\nRegistration Link: [http://localhost:5173/company-invite/${request?._id}]\n\nBest regards,\nHRPro Team`,
     },
   });
 

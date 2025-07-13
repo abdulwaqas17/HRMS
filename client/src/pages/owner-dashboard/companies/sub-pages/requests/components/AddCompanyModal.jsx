@@ -14,6 +14,7 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -32,7 +33,7 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-4">
+        <form onSubmit={handleSubmit((data) => onSubmit(data, reset))} className="p-4 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Company Name
@@ -44,6 +45,14 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
               <input
                 {...register("companyName", {
                   required: "Company name is required",
+                  minLength: {
+                    value: 3,
+                    message: "At least 3 characters",
+                  },
+                  pattern: {
+                    value: /^[A-Za-z\s]+$/,
+                    message: "Only letters allowed",
+                  },
                 })}
                 type="text"
                 className={`pl-10 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -61,16 +70,21 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Contact Person
+              Company Owner
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FiUser className="text-gray-400" />
               </div>
               <input
-                {...register("contactPerson", {
-                  required: "Contact person is required",
-                })}
+                {...register("companyAdmin", {
+                    required: "Admin name is required",
+                    minLength: { value: 3, message: "Minimum 3 characters" },
+                    pattern: {
+                      value: /^[A-Za-z\s]+$/,
+                      message: "Only letters allowed",
+                    },
+                  })}
                 type="text"
                 className={`pl-10 w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                   errors.contactPerson ? "border-red-500" : "border-gray-300"
@@ -78,11 +92,11 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                 placeholder="Enter contact name"
               />
             </div>
-            {errors.contactPerson && (
-              <p className="mt-1 text-sm text-red-600">
-                {errors.contactPerson.message}
-              </p>
-            )}
+           {errors.companyAdmin && (
+                  <p className="text-red-500 text-sm">
+                    {errors.companyAdmin.message}
+                  </p>
+                )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -95,11 +109,11 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                   <FiMail className="text-gray-400" />
                 </div>
                 <input
-                  {...register("email", {
+                 {...register("companyEmail", {
                     required: "Email is required",
                     pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address",
+                      value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                      message: "Invalid email format",
                     },
                   })}
                   type="email"
@@ -109,11 +123,11 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                   placeholder="Enter email"
                 />
               </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.email.message}
-                </p>
-              )}
+              {errors.companyEmail && (
+                  <p className="text-red-500 text-sm">
+                    {errors.companyEmail.message}
+                  </p>
+                )}
             </div>
 
             <div>
@@ -125,11 +139,22 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                   <FiPhone className="text-gray-400" />
                 </div>
                 <input
-                  {...register("phone")}
+                {...register("companyPhone", {
+                    required: "Phone number is required",
+                    pattern: {
+                      value: /^\+?[1-9]\d{1,14}$/, // E.164 format
+                      message: "Invalid phone number (e.g. +923001234567)",
+                    },
+                  })}
                   type="tel"
                   className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Enter phone"
                 />
+                {errors.companyPhone && (
+                  <p className="text-red-500 text-sm">
+                    {errors.companyPhone.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -143,7 +168,7 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                 <FiUsers className="text-gray-400" />
               </div>
               <select
-                {...register("industry")}
+                {...register("industry", { required: "Industry is required" })}
                 className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="IT">IT</option>
@@ -153,6 +178,11 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                 <option value="Manufacturing">Manufacturing</option>
                 <option value="Other">Other</option>
               </select>
+              {errors.industry && (
+                <p className="text-red-500 text-sm">
+                  {errors.industry.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -165,7 +195,9 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                 <FiUsers className="text-gray-400" />
               </div>
               <select
-                {...register("employeeCount")}
+                {...register("employeeRange", {
+                    required: "Employee range is required",
+                  })}
                 className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="1-10">1-10 Employees</option>
@@ -174,6 +206,11 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                 <option value="101-200">101-200 Employees</option>
                 <option value="200+">200+ Employees</option>
               </select>
+              {errors.employeeRange && (
+                  <p className="text-red-500 text-sm">
+                    {errors.employeeRange.message}
+                  </p>
+                )}
             </div>
           </div>
 
@@ -193,7 +230,7 @@ const AddCompanyModal = ({ isOpen, onClose, onSubmit,isSubmiting }) => {
                 <div className="flex items-center">
                   <ClipLoader
                     color={"#ffffff"}
-                    loading={loading}
+                    loading={isSubmiting}
                     size={20}
                     aria-label="Loading Spinner"
                     data-testid="loader"

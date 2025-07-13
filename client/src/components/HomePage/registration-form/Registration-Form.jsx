@@ -25,7 +25,7 @@ const RegistrationForm = () => {
           companyName: data.companyName,
           companyEmail: data.companyEmail,
           companyPhone: data.companyPhone,
-          adminName: data.adminName,
+          companyAdmin: data.companyAdmin,
           industry: data.industry,
           employeeRange: data.employeeRange,
           message: data.message || "",
@@ -105,10 +105,10 @@ const RegistrationForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-gray-700 mb-2">
-                  Contact Person Name
+                  Company Owner
                 </label>
                 <input
-                  {...register("adminName", {
+                  {...register("companyAdmin", {
                     required: "Admin name is required",
                     minLength: { value: 3, message: "Minimum 3 characters" },
                     pattern: {
@@ -119,9 +119,9 @@ const RegistrationForm = () => {
                   className="w-full px-4 py-2 border rounded-lg"
                   placeholder="Full name"
                 />
-                {errors.adminName && (
+                {errors.companyAdmin && (
                   <p className="text-red-500 text-sm">
-                    {errors.adminName.message}
+                    {errors.companyAdmin.message}
                   </p>
                 )}
               </div>

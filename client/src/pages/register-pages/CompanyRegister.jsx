@@ -31,14 +31,10 @@ const CompanyRegister = () => {
         );
         setCompanyData(data.data);
         console.log(data);
-        
-        
       } catch (error) {
-        toast.error(
-          error?.response?.data?.message || "Company not found"
-        );
+        toast.error(error?.response?.data?.message || "Company not found");
         console.log(error);
-        navigate(error?.response?.data?.link || "/not-found")
+        navigate(error?.response?.data?.link || "/not-found");
       } finally {
         setIsLoading(false);
       }
@@ -60,7 +56,7 @@ const CompanyRegister = () => {
       formData.append("companyPhone", companyData.companyPhone);
       formData.append("industry", companyData.industry);
       formData.append("employeeRange", companyData.employeeRange);
-      formData.append("adminName", companyData.adminName);
+      formData.append("companyAdmin", companyData.companyAdmin);
 
       // Editable fields (non-file)
       Object.entries(formInput).forEach(([key, value]) => {
@@ -71,6 +67,8 @@ const CompanyRegister = () => {
 
       // File field (must be separate!)
       if (formInput.companyLogo?.[0]) {
+        console.log(formInput.companyLogo);
+
         formData.append("companyLogo", formInput.companyLogo[0]);
       }
 
@@ -83,8 +81,13 @@ const CompanyRegister = () => {
         }
       );
 
-      toast.success(response.data.message ||"Company registered successfully!");
-      navigate(response.data.link || '/');
+      toast.success(
+        response.data.message || "Company registered successfully!"
+      );
+      const fullUrl = response.data.link || "/";
+      const relativePath = new URL(fullUrl).pathname;
+
+      navigate(relativePath); // ✅ '/admin-register/68739d54ea52a39753acf287'
     } catch (error) {
       toast.error(error?.response?.data?.message || "Registration failed.");
     } finally {
@@ -108,7 +111,8 @@ const CompanyRegister = () => {
             Complete Your Company Registration
           </h1>
           <p className="mt-3 text-lg text-gray-600">
-            Please fill in the remaining details to complete your company profile
+            Please fill in the remaining details to complete your company
+            profile
           </p>
         </div>
 
@@ -125,7 +129,9 @@ const CompanyRegister = () => {
             {/* Pre-filled disabled fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Company Name
+                </label>
                 <input
                   disabled
                   value={companyData?.companyName}
@@ -133,7 +139,9 @@ const CompanyRegister = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Company Email
+                </label>
                 <input
                   disabled
                   value={companyData?.companyEmail}
@@ -141,7 +149,9 @@ const CompanyRegister = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company Phone</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Company Phone
+                </label>
                 <input
                   disabled
                   value={companyData?.companyPhone}
@@ -149,7 +159,9 @@ const CompanyRegister = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Industry</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Industry
+                </label>
                 <input
                   disabled
                   value={companyData?.industry}
@@ -157,7 +169,9 @@ const CompanyRegister = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Employee Range</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Employee Range
+                </label>
                 <input
                   disabled
                   value={companyData?.employeeRange}
@@ -165,10 +179,12 @@ const CompanyRegister = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Admin Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Admin Name
+                </label>
                 <input
                   disabled
-                  value={companyData?.adminName}
+                  value={companyData?.companyAdmin}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-700"
                 />
               </div>
@@ -183,7 +199,7 @@ const CompanyRegister = () => {
                 <input
                   {...register("companyCity", { required: "City is required" })}
                   className={`w-full px-4 py-2.5 border ${
-                    errors.companyCity ? 'border-red-500' : 'border-gray-300'
+                    errors.companyCity ? "border-red-500" : "border-gray-300"
                   } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
                   placeholder="Enter your city"
                 />
@@ -203,7 +219,7 @@ const CompanyRegister = () => {
                     required: "Country is required",
                   })}
                   className={`w-full px-4 py-2.5 border ${
-                    errors.companyCountry ? 'border-red-500' : 'border-gray-300'
+                    errors.companyCountry ? "border-red-500" : "border-gray-300"
                   } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
                   placeholder="Enter your country"
                 />
@@ -220,10 +236,12 @@ const CompanyRegister = () => {
                 Address <span className="text-red-500">*</span>
               </label>
               <textarea
-                {...register("companyAddress", { required: "Address is required" })}
+                {...register("companyAddress", {
+                  required: "Address is required",
+                })}
                 rows={3}
                 className={`w-full px-4 py-2.5 border ${
-                  errors.companyAddress ? 'border-red-500' : 'border-gray-300'
+                  errors.companyAddress ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:ring-blue-500 focus:border-blue-500`}
                 placeholder="Enter your company's full address"
               />
@@ -240,7 +258,7 @@ const CompanyRegister = () => {
                   Subscription Plan
                 </label>
                 <select
-                  {...register("subscriptionPlan")} 
+                  {...register("subscriptionPlan")}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="Basic">Basic</option>
@@ -273,7 +291,8 @@ const CompanyRegister = () => {
                         />
                       </svg>
                       <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span> or drag and drop
+                        <span className="font-semibold">Click to upload</span>{" "}
+                        or drag and drop
                       </p>
                       <p className="text-xs text-gray-500">
                         PNG, JPG (MAX. 5MB)
@@ -289,7 +308,8 @@ const CompanyRegister = () => {
                               fileList?.[0]?.type
                             ) || "Only PNG/JPG/JPEG allowed",
                           fileSize: (fileList) =>
-                            fileList?.[0]?.size <= 5 * 1024 * 1024 || "Max size is 5MB",
+                            fileList?.[0]?.size <= 5 * 1024 * 1024 ||
+                            "Max size is 5MB",
                         },
                       })}
                       accept="image/png, image/jpeg, image/jpg"

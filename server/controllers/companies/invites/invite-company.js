@@ -10,7 +10,7 @@ const inviteCompany = async (req, res) => {
       companyName,
       companyEmail,
       companyPhone,
-      adminName,
+      companyAdmin,
       industry,
       employeeRange,
     } = req.body;
@@ -20,7 +20,7 @@ const inviteCompany = async (req, res) => {
       !companyName ||
       !companyEmail ||
       !companyPhone ||
-      !adminName ||
+      !companyAdmin ||
       !industry ||
       !employeeRange
     ) {
@@ -45,10 +45,14 @@ const inviteCompany = async (req, res) => {
       });
     }
 
-    // Step 4: Check if company already exists (by name or email)
+    // Step 5: Case-insensitive regex query for name and email
+    const nameQuery = { companyName: new RegExp(`^${companyName}$`, "i") };
+    const emailQuery = { companyEmail: new RegExp(`^${companyEmail}$`, "i") };
+
+    // Step 6: Check for duplicate company name in both collections
     const isDuplicateName =
-      (await CompanyRequest.exists({ companyName })) ||
-      (await RegCompany.exists({ companyName }));
+      (await CompanyRequest.exists(nameQuery)) ||
+      (await RegCompany.exists(nameQuery));
 
     if (isDuplicateName) {
       return res.status(409).json({
@@ -57,23 +61,24 @@ const inviteCompany = async (req, res) => {
       });
     }
 
-    const isDuplicateEmail =
-      (await CompanyRequest.exists({ companyEmail })) ||
-      (await RegCompany.exists({ companyEmail }));
+    // Step 7: Check for duplicate company email in both collections
+    // const isDuplicateEmail =
+    //   (await CompanyRequest.exists(emailQuery)) ||
+    //   (await RegCompany.exists(emailQuery));
 
-    if (isDuplicateEmail) {
-      return res.status(409).json({
-        success: false,
-        message: "A company with this email already exists",
-      });
-    }
+    // if (isDuplicateEmail) {
+    //   return res.status(409).json({
+    //     success: false,
+    //     message: "A company with this email already exists",
+    //   });
+    // }
 
     // Step 5: Save the new company request
     const newRequest = await CompanyRequest.create({
       companyName,
       companyEmail,
       companyPhone,
-      adminName,
+      companyAdmin,
       industry,
       employeeRange,
       status: "invited",
@@ -100,10 +105,12 @@ const inviteCompany = async (req, res) => {
       to: companyEmail,
       subject: `Invitation to join HRPro - ${companyName}`,
       html: `
-        <p>Dear ${adminName || "Admin"},</p>
+        <p>Dear ${companyAdmin || "Admin"},</p>
         <p>We're pleased to invite you to join our HR management platform.</p>
         <p>Please click the link below to complete your registration:</p>
-        <p><a href="http://localhost:5173/company-invite/${newRequest._id}" target="_blank">Click here to register</a></p>
+        <p><a href="http://localhost:5173/company-register/${
+          newRequest._id
+        }" target="_blank">Click here to register</a></p>
         <p>Best regards,<br/>HRPro Team</p>
       `,
     };

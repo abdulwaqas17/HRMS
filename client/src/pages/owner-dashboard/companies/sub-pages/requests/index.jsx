@@ -61,7 +61,7 @@ const Requests = () => {
   //   {
   //     id: 1,
   //     companyName: "EduSoft Solutions",
-  //     adminName: "Bilal Ahmed",
+  //     companyAdmin: "Bilal Ahmed",
   //     companyEmail: "bilal@edusoft.com",
   //     companyPhone: "+92 300 1234567",
   //     employeeRange: "15-20",
@@ -75,7 +75,7 @@ const Requests = () => {
   const filteredRequests = companiesRequest?.filter((request) => {
     const matchesSearch =
       request.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.adminName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      request.companyAdmin.toLowerCase().includes(searchTerm.toLowerCase()) ||
       request.companyEmail.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesFilter = filter === "all" || request.status === filter;
@@ -83,12 +83,7 @@ const Requests = () => {
     return matchesSearch && matchesFilter;
   });
 
-  // Handle actions
-  const handleApprove = (request) => {
-    setSelectedRequest(request);
-    setShowInviteModal(true);
-  };
-
+  // to reject company request
   const handleReject = (id) => {
     console.log(id);
 
@@ -99,8 +94,13 @@ const Requests = () => {
     );
   };
 
-  console.log(selectedRequest, "selectedRequest");
+  // to select a company for send invite
+  const handleApprove = (request) => {
+    setSelectedRequest(request);
+    setShowInviteModal(true);
+  };
 
+  // to send invitation to a company
   const handleInvite = async (inviteData) => {
     let ownerToken = localStorage.getItem("ownerToken");
     if (!ownerToken) {
@@ -157,8 +157,12 @@ const Requests = () => {
       console.error("Invite error:", error);
       const errorMessage =
         error.response?.data?.message || "Invite failed. Please try again.";
+
       toast.error(errorMessage);
-      if (errorMessage === "Unauthorized" || "Invalid Token") {
+      console.log(errorMessage);
+
+      // ✅ Corrected Condition
+      if (["Unauthorized", "Invalid Token"].includes(errorMessage)) {
         setTimeout(() => {
           navigate("/owner-login");
         }, 1500);
@@ -168,8 +172,19 @@ const Requests = () => {
     }
   };
 
-  const handleAddCompany = async (data) => {
-    console.log(data);
+  // to manually invite/add company
+  const handleAddCompany = async (data,reset) => {
+    console.log(data,reset);
+
+    let ownerToken = localStorage.getItem("ownerToken");
+    if (!ownerToken) {
+      toast.error("Owner token not found, Login Fisrt");
+
+      setTimeout(() => {
+        navigate("/owner-login");
+      }, 1500);
+      return;
+    }
 
     try {
       setSubmiting(true);
@@ -179,24 +194,45 @@ const Requests = () => {
           companyName: data.companyName,
           companyEmail: data.companyEmail,
           companyPhone: data.companyPhone,
-          adminName: data.adminName,
+          companyAdmin: data.companyAdmin,
           industry: data.industry,
           employeeRange: data.employeeRange,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${ownerToken}`,
+          },
         }
       );
 
+      // success message
       toast.success(response.data.message || "Invite Company Successfully");
+
+    
+
+      // clear form fild, remove exiting errors (builtin method of React hook form)
       reset();
-    } catch (error) {
-      console.error("Invite error:", error);
-      toast.error(
-        error.response?.data?.message ||
-          "Something went wrong. Please try again."
-      );
-    } finally {
+
       setSubmiting(false);
       setShowAddModal(false);
-    }
+
+    } catch (error) {
+      console.error("Invite error:", error);
+      const errorMessage =
+        error.response?.data?.message || "Invite failed. Please try again.";
+
+      toast.error(errorMessage);
+      console.log(errorMessage);
+
+      setSubmiting(false);
+
+      // ✅ Corrected Condition
+      if (["Unauthorized", "Invalid Token"].includes(errorMessage)) {
+        setTimeout(() => {
+          navigate("/owner-login");
+        }, 1500);
+      }
+    } 
   };
 
   const refreshData = async () => {
@@ -372,7 +408,7 @@ const Requests = () => {
                           </div>
                           <div className="ml-3">
                             <div className="text-sm text-gray-900">
-                              {request.adminName}
+                              {request.companyAdmin}
                             </div>
                             <div className="text-sm text-gray-500">
                               {request.companyPhone}

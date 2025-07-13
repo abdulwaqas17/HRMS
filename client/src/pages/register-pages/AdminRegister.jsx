@@ -87,7 +87,7 @@ const AdminRegister = () => {
       toast.success(
         response.data.message || "Admin account registered successfully!"
       );
-      navigate(response.data.link || "/admin-dashboard"); // Navigate to admin dashboard or login
+      navigate(response.data.link || "/admin/dashboard"); // Navigate to admin dashboard or login
     } catch (error) {
       toast.error(
         error?.response?.data?.message || "Admin registration failed."

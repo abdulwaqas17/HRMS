@@ -102,7 +102,7 @@ const createCompanyRegister = async (req, res) => {
       to: companyEmail,
       subject: `Create admin account for ${companyName}`,
       html: `
-        <p>Dear ${existingRequest.adminName || "Admin"},</p>
+        <p>Dear ${existingRequest.companyAdmin || "Admin"},</p>
         <p>We're pleased to inform you that your company has been successfully registered.</p>
         <p>You can now create an admin account to access your dashboard.</p>
         <p><a href="${registerLink}" target="_blank">Click here to register</a></p>
@@ -112,7 +112,7 @@ const createCompanyRegister = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Company registered successfully",
+      message: "Company registered and email send to Admin successfully",
       data: newCompanyRegister,
       link: registerLink,
     });

@@ -4,7 +4,8 @@ let mongoose = require('mongoose');
 const companyRequestSchema = new mongoose.Schema({
   companyName: {
     type: String,
-    required: [true, 'Company name is required']
+    required: [true, 'Company name is required'],
+    trim: true
   },
   companyEmail: {
     type: String,
@@ -16,7 +17,7 @@ const companyRequestSchema = new mongoose.Schema({
     required: [true, 'Phone number is required']
   },
 
-  adminName : {
+  companyAdmin : {
     type : String,
     required : [true, 'Admin name is required']
   },
