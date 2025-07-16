@@ -7,7 +7,7 @@ import { nonAuthRoutes } from "./routes/non-authenticate-routes/nonAuthRoutes.js
 import { ownerRoutes } from "./routes/authenticate-routes/ownerRoutes.jsx";
 import { adminRoutes } from "./routes/authenticate-routes/adminRoutes.jsx";
 import { hrRoutes } from "./routes/authenticate-routes/hrRoutes.jsx";
-import { registerRoutes } from "./routes/authenticate-routes/registerRoutes.jsx";
+import { registerRoutes } from "./routes/non-authenticate-routes/registerRoutes.jsx";
 // App.jsx
 // import { nonAuthRoutes } from "@/routes/non-authenticate-routes/nonAuthRoutes.jsx";
 // import { ownerRoutes } from "@/routes/authenticate-routes/ownerRoutes.jsx";

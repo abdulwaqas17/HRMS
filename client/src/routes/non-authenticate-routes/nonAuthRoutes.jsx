@@ -19,15 +19,15 @@ export const nonAuthRoutes = [
   { path: "/", element: <Home /> },
 
   {
-    path: "/owner-login",
+    path: "/owner/login",
     element: <AuthLayout left={<OwnerLoginImage />} right={<OwnerLoginForm />} />,
   },
   {
-    path: "/admin-login",
+    path: "/admin/login",
     element: <AuthLayout left={<AdminLoginImage />} right={<AdminLoginForm />} />,
   },
   {
-    path: "/hr-login",
+    path: "/hr/login",
     element: <AuthLayout left={<HrLoginImage />} right={<HrLoginForm />} />,
   },
   {

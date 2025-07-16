@@ -16,7 +16,13 @@ let cors = require('cors');
 app.use(express.json());
 //Yeh aap ke server ko web forms ka data asani se handle karne deta hai.
 app.use(express.urlencoded({ extended: true }));  
-app.use(cors()); 
+// ✅ Specify allowed origins
+const corsOptions = {
+  origin: 'http://localhost:5173', // frontend ka origin
+  credentials: true, // cookies waghera allow karne ke liye (agar zarurat ho)
+};
+
+app.use(cors(corsOptions));
 
 // to connect mongo db
 connectDB();
