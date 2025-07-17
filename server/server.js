@@ -2,6 +2,7 @@ let express = require('express');
 let app = express();
 require('dotenv').config();
 let userLoginRoute = require('./routes/auth/user-login.route');
+let userRoutes = require('./routes/users/users.routes');
 let spRoutes = require('./routes/service-provider/sp.routes');
 let ownerRoutes = require('./routes/owner/owner.routes');
 let adminRoutes = require('./routes/admins/admin.routes');
@@ -28,6 +29,7 @@ app.use(cors(corsOptions));
 connectDB();
 
 app.use('/',userLoginRoute);
+app.use('/',userRoutes);
 app.use('/',spRoutes);
 app.use('/',ownerRoutes);
 app.use('/',adminRoutes);

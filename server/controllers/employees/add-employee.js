@@ -37,6 +37,8 @@ const addEmployee = async (req, res) => {
       profileImage,
     } = req.body;
 
+    // if employye send request so admin can change slary, designation and send invite to password add and login
+// if admin add so firstName,lastName, email, role,designation, salary, company then invite send to emp email and they file remiang detail and set password then login same for hr above all
     // ✅ Check required fields
     if (
       !firstName ||

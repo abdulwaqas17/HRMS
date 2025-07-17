@@ -35,7 +35,7 @@ const createAdmin = async (req, res) => {
       password,
       gender,
       dob,
-      profileImage,
+      
     } = req.body;
 
     // ✅ 1. Field level validation

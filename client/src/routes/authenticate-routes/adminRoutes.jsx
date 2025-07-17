@@ -1,6 +1,7 @@
 import CompanyDashboard from "@/pages/admin-dashboard/overview";
-import Hrs from "@/pages/admin-dashboard/hrs";
+
 import ProtectedRoute from "@/auth/ProtectedRoute";
+import CompanyUsers from "@/pages/admin-dashboard/company-users";
 const values = {
   token: "adminToken",
   redirect: "admin/login",
@@ -15,10 +16,10 @@ export const adminRoutes = [
     ),
   },
   {
-    path: "/admin/hrs",
+    path: "/admin/users",
     element: (
       <ProtectedRoute values={values}>
-        <Hrs />
+        <CompanyUsers />
       </ProtectedRoute>
     ),
   },
