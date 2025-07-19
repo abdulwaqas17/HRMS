@@ -1,4 +1,5 @@
 
+import CompanyWelcome from "@/layouts/authenticate-pages/company-welcome/CompanyWelcome";
 import AuthLayout from "@/layouts/authenticate-pages/signin/layout";
 import Home from "@/layouts/non-authenticate-page/home";
 import NotFoundPage from "@/pages/404-page/NotFoundPage ";
@@ -17,6 +18,8 @@ import {
 
 export const nonAuthRoutes = [
   { path: "/", element: <Home /> },
+
+  { path: "/:companyName", element: <CompanyWelcome /> },
 
   {
     path: "/owner/login",

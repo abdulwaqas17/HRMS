@@ -77,6 +77,12 @@ const registeredCompanySchema = new mongoose.Schema({
       ref: 'users'
     }
   ],
+  requests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'users'
+    }
+  ],
 //   planStartDate: {
 //     type: Date,
 //     required: [true, 'Plan start date is required']

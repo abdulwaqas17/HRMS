@@ -324,3 +324,4 @@ Yeh woh asal data hai jo aap is `PieChart` component ko `data` prop ke taur par 
 Yeh Pie Chart component aap ko employees ki departments ke hisaab se taqseem (distribution) jaise data ko bohot hi clear aur colorful tareeqe se dikhane mein madad karega.
 
 Umeed hai, Waqas, yeh tafseeli tafseer aap ko samajh aa gayi hogi? Koi aur sawaal ho to zaroor poochiye ga!
+

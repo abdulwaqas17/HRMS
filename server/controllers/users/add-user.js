@@ -137,12 +137,12 @@ const addUser = async (req, res) => {
     await newUser.save();
 
     // ✅ Push into Company
-    companyExists.users.push(newUser._id);
+    companyExists.requests.push(newUser._id);
     await companyExists.save();
 
     return res.status(201).json({
       success: true,
-      message: `${role} created and added in company successfully`,
+      message: "Your registration request has been sent successfully",
       data: {
         _id: newUser._id,
         firstName: newUser.firstName,
