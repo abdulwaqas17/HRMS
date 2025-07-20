@@ -10,5 +10,6 @@ const getCompanyRequest = require('../../../controllers/companies/requests/get-c
 router.post('/company-request',createCompanyRequest)
 router.get('/companies-request',getCompaniesRequest);
 router.get('/get-company-request/:id', getCompanyRequest);
+router.get('/company/exits/:companyName', checkCompanyExists);
 
 module.exports = router;

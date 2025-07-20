@@ -18,6 +18,10 @@ import {
 
 export const nonAuthRoutes = [
   { path: "/", element: <Home /> },
+  {
+    path: "/forgot-password",
+    element: <AuthLayout left={<ForgotPasswordImage />} right={<ForgotPasswordForm />} />,
+  },
 
   { path: "/:companyName", element: <CompanyWelcome /> },
 
@@ -37,10 +41,7 @@ export const nonAuthRoutes = [
     path: "/otp-verify",
     element: <AuthLayout left={<OtpVerifyImage />} right={<OtpVerifyForm />} />,
   },
-  {
-    path: "/forgot-password",
-    element: <AuthLayout left={<ForgotPasswordImage />} right={<ForgotPasswordForm />} />,
-  },
+  
   { path: "/not-found", element: <NotFoundPage /> },
   { path: "*", element: <NotFoundPage /> },
 ];

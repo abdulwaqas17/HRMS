@@ -1,44 +1,29 @@
-// import React from "react";
-
-// const CompanyWelcome = () => {
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-//       <div className="text-center max-w-md w-full">
-//         {/* Logo */}
-//         <div className="flex justify-center mb-6">
-        //   <img
-        //     src="https://images.seeklogo.com/logo-png/38/1/company-logo-png_seeklogo-389186.png"
-        //     alt="Company Logo"
-        //     className="h-20 w-20 rounded-[50%] shadow-lg"
-        //   />
-//         </div>
-
-//         {/* Welcome Text */}
-//         <h1 className="text-2xl font-bold text-gray-800 mb-2">
-//           Welcome Company User
-//         </h1>
-//         <p className="text-gray-600 mb-6">
-//           Please login to your account using your respective role.
-//         </p>
-
-//         {/* Role Buttons */}
-//         <div className="flex flex-col sm:flex-row justify-center gap-4">
-//           <button className="w-full sm:w-auto px-[15px] py-[8px]">Admin Login</button>
-//           <button className="w-full sm:w-auto px-[15px] py-[8px]">Admin Login</button>
-//           <button className="w-full sm:w-auto px-[15px] py-[8px]">Admin Login</button>
-          
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default CompanyWelcome;
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const RoleSelectionPage = () => {
+   const { companyName } = useParams(); // e.g., RaYaNe
   const navigate = useNavigate();
+  const [shouldRender, setShouldRender] = useState(false);
+
+  const slugify = (str) =>
+    str.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+
+  useEffect(() => {
+    const formattedSlug = slugify(companyName);
+
+    console.log(`Company Name: ${companyName}, Formatted Slug: ${formattedSlug}`);
+    
+
+    // if (companyName !== formattedSlug) {
+    //   navigate(`/${formattedSlug}`, { replace: true });
+    // } else {
+    //   setShouldRender(true); // Only render page after slug is correct
+    // }
+  }, []);
+
+  if (!shouldRender) return null; // Avoid premature render
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex flex-col items-center justify-center p-4">
