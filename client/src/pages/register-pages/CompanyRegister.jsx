@@ -52,6 +52,7 @@ const CompanyRegister = () => {
       const formData = new FormData();
       // Manual fields
       formData.append("companyName", companyData.companyName);
+      formData.append("companyNameSlug", companyData.companyNameSlug);
       formData.append("companyEmail", companyData.companyEmail);
       formData.append("companyPhone", companyData.companyPhone);
       formData.append("industry", companyData.industry);

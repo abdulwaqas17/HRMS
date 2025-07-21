@@ -1,29 +1,83 @@
+import axios from "axios";
 import React from "react";
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 const RoleSelectionPage = () => {
-   const { companyName } = useParams(); // e.g., RaYaNe
+  const { companyName } = useParams(); // e.g., RaYaNe
   const navigate = useNavigate();
   const [shouldRender, setShouldRender] = useState(false);
+  const [companyData, setCompanyData] = useState(null);
 
+  console.log('Runnimg CompanyWelcome.jsx',companyName);
+  
+
+  // Convert to slug format
   const slugify = (str) =>
-    str.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+    str
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, ""); 
 
-  useEffect(() => {
     const formattedSlug = slugify(companyName);
 
-    console.log(`Company Name: ${companyName}, Formatted Slug: ${formattedSlug}`);
-    
+  useEffect(() => {
+     
 
-    // if (companyName !== formattedSlug) {
-    //   navigate(`/${formattedSlug}`, { replace: true });
-    // } else {
-    //   setShouldRender(true); // Only render page after slug is correct
-    // }
-  }, []);
+    // Fetch company data
+    const fetchCompany = async () => {
+      try {
+       
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_API_URL
+          }/get-register-company/${companyName}`,
+          
+        );
+       
+        // console.log(response);
 
-  if (!shouldRender) return null; // Avoid premature render
+        // if company found
+        if (response.data.success ) {
+
+          // and the slug matches the company name, So page should render
+          if(formattedSlug === companyName) {
+
+            setCompanyData(response.data.data);
+            setShouldRender(true); 
+
+          // if the slug does not match, redirect to the correct slug
+          }else {
+            navigate(`${response.data.link}`, { replace: true });
+          }
+        } 
+
+      } catch (error) {
+        console.log("Error fetching users:", error);
+        const link = error?.response?.data?.link;
+        // console.log(link);
+        
+        navigate(`${link}`, { replace: true });
+        // toast.error(error.response?.data?.message || "Failed to fetch users");
+      } 
+    };
+
+    // console.log(
+    //   `Company Name: ${companyName}, Formatted Slug: ${formattedSlug}`
+    // );
+
+    fetchCompany();
+  }, [companyName]);
+
+   if (!shouldRender) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <ClipLoader color="#2563eb" size={40} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex flex-col items-center justify-center p-4">
@@ -31,18 +85,19 @@ const RoleSelectionPage = () => {
       <div className="mb-8 flex flex-col items-center">
         <div className="w-24 h-24 md:w-[150px] md:h-[150px]  rounded-full shadow-lg flex items-center justify-center mb-6 border-[4px] border-dashed border-gray-400 p-[10px]">
           <img
-            src="https://images.seeklogo.com/logo-png/38/1/company-logo-png_seeklogo-389186.png"
+            src={companyData.companyLogo}
             alt="Company Logo"
             className="h-full w-full rounded-[50%] object-fill shadow-lg"
           />
         </div>
-        
+
         {/* Welcome Text */}
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-2">
           Welcome to HRMS Portal
         </h1>
         <p className="text-gray-600 text-center max-w-md">
-          Login to your account to manage human resources, employees, and company operations efficiently.
+          Login to your account to manage human resources, employees, and
+          company operations efficiently.
         </p>
       </div>
 
@@ -51,7 +106,7 @@ const RoleSelectionPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Admin Button */}
           <button
-            onClick={() => navigate("/admin-login")}
+            onClick={() => navigate(`/${companyName}/admin/login`)}
             className="bg-white hover:bg-blue-50 border border-blue-200 text-blue-700 py-4 px-6 rounded-xl shadow-sm transition-all duration-300 flex flex-col items-center hover:shadow-md hover:-translate-y-1"
           >
             <svg
@@ -69,12 +124,14 @@ const RoleSelectionPage = () => {
               />
             </svg>
             <span className="font-medium">Admin</span>
-            <span className="text-xs text-gray-500 mt-1">System Administrator</span>
+            <span className="text-xs text-gray-500 mt-1">
+              System Administrator
+            </span>
           </button>
 
           {/* HR Button */}
           <button
-            onClick={() => navigate("/hr-login")}
+            onClick={() => navigate(`/${companyName}/hr/login`)}
             className="bg-white hover:bg-purple-50 border border-purple-200 text-purple-700 py-4 px-6 rounded-xl shadow-sm transition-all duration-300 flex flex-col items-center hover:shadow-md hover:-translate-y-1"
           >
             <svg
@@ -97,7 +154,7 @@ const RoleSelectionPage = () => {
 
           {/* Employee Button */}
           <button
-            onClick={() => navigate("employee-login")}
+            onClick={() => navigate(`/${companyName}/employee/login`)}
             className="bg-white hover:bg-green-50 border border-green-200 text-green-700 py-4 px-6 rounded-xl shadow-sm transition-all duration-300 flex flex-col items-center hover:shadow-md hover:-translate-y-1"
           >
             <svg

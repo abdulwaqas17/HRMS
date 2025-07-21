@@ -3,6 +3,7 @@
 const CompanyRequest = require("../../../models/companies/req-company.model");
 const RegCompany = require("../../../models/companies/reg-company.model");
 const { isValidEmail, isValidPhone } = require("../../../utils/validations");
+const { generateDashSlug } = require("../../../utils/slugs");
 
 // Controller to handle company request creation
 const createCompanyRequest = async (req, res) => {
@@ -74,9 +75,12 @@ const createCompanyRequest = async (req, res) => {
       });
     }
 
+     const companySlug = generateDashSlug(companyName);// tech-starts
+
     // Step 3: Create new request document
     const newRequest = new CompanyRequest({
       companyName,
+      companyNameSlug: companySlug,
       companyEmail,
       companyPhone,
       companyAdmin,

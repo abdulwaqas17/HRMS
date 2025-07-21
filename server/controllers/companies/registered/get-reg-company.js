@@ -1,42 +1,46 @@
-const mongoose = require('mongoose');
-const RegisterCompany = require('../../../models/companies/reg-company.model');
+const RegisterCompany = require("../../../models/companies/reg-company.model");
+const { generatePlainSlug, generateDashSlug } = require("../../../utils/slugs");
 
 const getRegisteredCompany = async (req, res) => {
-  const { id: companyId } = req.params;
+  const { companyName } = req.params;
 
   try {
-    // Validate MongoDB ObjectId
-    if (!mongoose.Types.ObjectId.isValid(companyId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Company ID",
-        link: "/not-found"
-      });
-    }
+    const case1 = generateDashSlug(companyName);// tech-starts
+    const case2 = generatePlainSlug(companyName);// techstarts
 
+    console.log("Checking company", case1);
+    console.log("Checking company", case2);
     // Find company request
-    const isCompany = await RegisterCompany.findById(companyId);
+    const isCompany = await RegisterCompany.findOne({
+      $or: [{ companyNameSlug: case1 }, { companyNameSlug: case2 }],
+    });
+
+    
+  
 
     if (!isCompany) {
       return res.status(404).json({
         success: false,
         message: "Company not found",
-        link: "/not-found"
+        link: "/not-found",
       });
     }
+
+      console.log("Checking company",isCompany);
+    console.log("Checking company",isCompany.companyNameSlug);
 
     // Return register company
     return res.status(200).json({
       success: true,
+      link: `/${isCompany.companyNameSlug}`,
       data: isCompany,
-      message: "Register company fetched successfully"
+      message: "Company exists",
     });
-
   } catch (error) {
     console.error("Error fetching company request:", error.message);
     return res.status(500).json({
       success: false,
-      message: "Internal server error"
+      message: "Internal server error",
     });
   }
 };

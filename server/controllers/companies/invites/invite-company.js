@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const CompanyRequest = require("../../../models/companies/req-company.model");
 const RegCompany = require("../../../models/companies/reg-company.model");
 const { isValidPhone, isValidEmail } = require("../../../utils/validations");
+const { generateDashSlug } = require("../../../utils/slugs");
 
 const inviteCompany = async (req, res) => {
   try {
@@ -73,9 +74,12 @@ const inviteCompany = async (req, res) => {
     //   });
     // }
 
+     const companySlug = generateDashSlug(companyName);// tech-starts
+
     // Step 5: Save the new company request
     const newRequest = await CompanyRequest.create({
       companyName,
+      companyNameSlug: companySlug,
       companyEmail,
       companyPhone,
       companyAdmin,

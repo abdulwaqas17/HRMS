@@ -7,6 +7,11 @@ const registeredCompanySchema = new mongoose.Schema({
     required: [true, 'Company name is required'],
     trim: true
   },
+   companyNameSlug: {
+  type: String,
+  required: true,
+  unique : true
+},
   companyEmail: {
     type: String,
     required: [true, 'Company email is required'],

@@ -10,6 +10,6 @@ let router = express.Router();
 
 router.post('/company-register/:id',upload.single('companyLogo'),createCompanyRegister)
 router.get('/registered-companies',getRegisteredCompanies);
-router.get('/get-register-company/:id',getRegisteredCompany);
+router.get('/get-register-company/:companyName',getRegisteredCompany);
 
 module.exports = router;
