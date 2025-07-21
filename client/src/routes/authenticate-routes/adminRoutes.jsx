@@ -8,7 +8,7 @@ const values = {
 };
 export const adminRoutes = [
   {
-    path: "/admin/dashboard",
+    path: "/:companyName/admin/dashboard",
     element: (
       <ProtectedRoute values={values}>
         <CompanyDashboard />

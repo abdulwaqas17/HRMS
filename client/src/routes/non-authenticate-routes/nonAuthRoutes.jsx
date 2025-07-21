@@ -42,7 +42,7 @@ export const nonAuthRoutes = [
   },
 
   {
-    path: "/owner/login",
+    path: "/hrms-pro/owner/login",
     element: (
       <AuthLayout left={<OwnerLoginImage />} right={<OwnerLoginForm />} />
     ),

@@ -1,3 +1,4 @@
+import { useCompany } from "@/context/CompanyContext";
 import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
@@ -5,73 +6,87 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 
 const RoleSelectionPage = () => {
-  const { companyName } = useParams(); // e.g., RaYaNe
-  const navigate = useNavigate();
-  const [shouldRender, setShouldRender] = useState(false);
-  const [companyData, setCompanyData] = useState(null);
 
-  console.log('Runnimg CompanyWelcome.jsx',companyName);
+  const [companyData, setCompanyData] = useState(null);
+      const {loading,error,company} = useCompany();
+  
+      useEffect(() => {
+        if (company) {  
+          setCompanyData(company.data);
+        }
+      }, [company]);
+  
+         console.log('loading,error,company', loading, error, company);
+  // const { companyName } = useParams(); // e.g., RaYaNe
+  // const navigate = useNavigate();
+  // const [shouldRender, setShouldRender] = useState(false);
+  // const [companyData, setCompanyData] = useState(null);
+
+  // console.log('Runnimg CompanyWelcome.jsx',companyName);
   
 
-  // Convert to slug format
-  const slugify = (str) =>
-    str
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^\w\-]+/g, ""); 
+  // // Convert to slug format
+  // const slugify = (str) =>
+  //   str
+  //     .trim()
+  //     .toLowerCase()
+  //     .replace(/\s+/g, "-")
+  //     .replace(/[^\w\-]+/g, ""); 
 
-    const formattedSlug = slugify(companyName);
+  //   const formattedSlug = slugify(companyName);
 
-  useEffect(() => {
+  // useEffect(() => {
      
 
-    // Fetch company data
-    const fetchCompany = async () => {
-      try {
+  //   // Fetch company data
+  //   const fetchCompany = async () => {
+  //     try {
        
-        const response = await axios.get(
-          `${
-            import.meta.env.VITE_API_URL
-          }/get-register-company/${companyName}`,
+  //       const response = await axios.get(
+  //         `${
+  //           import.meta.env.VITE_API_URL
+  //         }/get-register-company/${companyName}`,
           
-        );
-       
-        // console.log(response);
+  //       );
 
-        // if company found
-        if (response.data.success ) {
-
-          // and the slug matches the company name, So page should render
-          if(formattedSlug === companyName) {
-
-            setCompanyData(response.data.data);
-            setShouldRender(true); 
-
-          // if the slug does not match, redirect to the correct slug
-          }else {
-            navigate(`${response.data.link}`, { replace: true });
-          }
-        } 
-
-      } catch (error) {
-        console.log("Error fetching users:", error);
-        const link = error?.response?.data?.link;
-        // console.log(link);
+  //       console.log(response.data);
         
-        navigate(`${link}`, { replace: true });
-        // toast.error(error.response?.data?.message || "Failed to fetch users");
-      } 
-    };
+       
+  //       // console.log(response);
 
-    // console.log(
-    //   `Company Name: ${companyName}, Formatted Slug: ${formattedSlug}`
-    // );
+  //       // if company found
+  //       if (response.data.success ) {
 
-    fetchCompany();
-  }, [companyName]);
+  //         // and the slug matches the company name, So page should render
+  //         if(formattedSlug === companyName) {
 
-   if (!shouldRender) {
+  //           setCompanyData(response.data.data);
+  //           setShouldRender(true); 
+
+  //         // if the slug does not match, redirect to the correct slug
+  //         }else {
+  //           navigate(`${response.data.link}`, { replace: true });
+  //         }
+  //       } 
+
+  //     } catch (error) {
+  //       console.log("Error fetching users:", error);
+  //       const link = error?.response?.data?.link;
+  //       // console.log(link);
+        
+  //       navigate(`${link}`, { replace: true });
+  //       // toast.error(error.response?.data?.message || "Failed to fetch users");
+  //     } 
+  //   };
+
+  //   // console.log(
+  //   //   `Company Name: ${companyName}, Formatted Slug: ${formattedSlug}`
+  //   // );
+
+  //   fetchCompany();
+  // }, [companyName]);
+
+   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <ClipLoader color="#2563eb" size={40} />
@@ -85,7 +100,7 @@ const RoleSelectionPage = () => {
       <div className="mb-8 flex flex-col items-center">
         <div className="w-24 h-24 md:w-[150px] md:h-[150px]  rounded-full shadow-lg flex items-center justify-center mb-6 border-[4px] border-dashed border-gray-400 p-[10px]">
           <img
-            src={companyData.companyLogo}
+            src={companyData?.companyLogo}
             alt="Company Logo"
             className="h-full w-full rounded-[50%] object-fill shadow-lg"
           />

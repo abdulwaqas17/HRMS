@@ -114,6 +114,7 @@ const UserLogin = async (req, res) => {
       message: "Login successful",
       token,
       user: userData,
+      link : `/${company.companyNameSlug}/${role.toLowerCase()}/dashboard`,
     });
   } catch (error) {
     console.error("Login error:", error.message);

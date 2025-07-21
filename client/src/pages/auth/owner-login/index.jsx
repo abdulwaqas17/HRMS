@@ -51,7 +51,7 @@ const OwnerLoginForm = () => {
  
      try {
        let response = await axios.post(
-         `${import.meta.env.VITE_API_URL}/auth/login/owner`,
+         `${import.meta.env.VITE_API_URL}/hrms-pro/login/owner`,
          {
            email: formData.email,
            password: formData.password,
@@ -61,7 +61,7 @@ const OwnerLoginForm = () => {
        localStorage.setItem("ownerToken", response.data.token);
        toast.success("Login successful! Redirecting...");
        setTimeout(() => {
-         navigate("/");
+         navigate("/hrms-pro/owner/dashboard");
        }, 1500);
      } catch (error) {
        console.error("Error during login:", error);

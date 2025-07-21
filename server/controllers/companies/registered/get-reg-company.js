@@ -1,19 +1,36 @@
 const RegisterCompany = require("../../../models/companies/reg-company.model");
+const OwnerCompany = require("../../../models/service-provider/service-provider.model");
 const { generatePlainSlug, generateDashSlug } = require("../../../utils/slugs");
 
 const getRegisteredCompany = async (req, res) => {
-  const { companyName } = req.params;
+  const { companyName} = req.params;
 
   try {
-    const case1 = generateDashSlug(companyName);// tech-starts
+    const case1 = generateDashSlug(companyName);// tech-starts 
     const case2 = generatePlainSlug(companyName);// techstarts
+    // console.log("Checking company", case1);
+    // console.log("Checking company", case2);
+    const {role} = req.user
+    console.log('req.user',req.user);
 
-    console.log("Checking company", case1);
-    console.log("Checking company", case2);
+
+    
     // Find company request
-    const isCompany = await RegisterCompany.findOne({
-      $or: [{ companyNameSlug: case1 }, { companyNameSlug: case2 }],
-    });
+    // const isCompany = await RegisterCompany.findOne({
+    //   $or: [{ companyNameSlug: case1 }, { companyNameSlug: case2 }],
+    // });
+    
+        let isCompany = null;
+        if (role.toLowerCase() === "owner") {
+           isCompany = await OwnerCompany.findOne({
+            $or: [{ companyNameSlug: case1 }, { companyNameSlug: case2 }],
+          });
+        } else {
+          // Find company request
+           isCompany = await RegisterCompany.findOne({
+            $or: [{ companyNameSlug: case1 }, { companyNameSlug: case2 }],
+          });
+        }
 
     
   

@@ -6,12 +6,12 @@ import ProtectedRoute from "@/auth/ProtectedRoute";
 
 const values = {
   token: "ownerToken",
-  redirect: "owner/login"
+  redirect: "hrms-pro/owner/login"
 };
 
 export const ownerRoutes = [
   {
-    path: "/owner/dashboard",
+    path: "/hrms-pro/owner/dashboard",
     element: (
       <ProtectedRoute values={values}>
         <OwnerDashboard />
@@ -19,7 +19,7 @@ export const ownerRoutes = [
     ),
   },
   {
-    path: "/owner/companies/registered",
+    path: "/hrms-pro/owner/companies/registered",
     element: (
       <ProtectedRoute values={values}>
         <Companies />
@@ -27,7 +27,7 @@ export const ownerRoutes = [
     ),
   },
   {
-    path: "/owner/companies/requests",
+    path: "/hrms-pro/owner/companies/requests",
     element: (
       <ProtectedRoute values={values}>
         <Requests />

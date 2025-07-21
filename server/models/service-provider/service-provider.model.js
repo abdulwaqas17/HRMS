@@ -11,6 +11,11 @@ const serviceProviderSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+    companyNameSlug: {
+  type: String,
+  required: true,
+  unique : true
+},
   email: {
     type: String,
     required: true,
@@ -28,13 +33,13 @@ const serviceProviderSchema = new mongoose.Schema({
   companies: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'companies'
+      ref: 'registeredcompanies'
     }
   ],
   requests: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'requests'
+      ref: 'companyrequests'
     }
   ],
   createdAt: {

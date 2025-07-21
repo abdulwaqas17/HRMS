@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   FiDollarSign, FiBriefcase, FiClock, FiUserCheck 
 } from 'react-icons/fi';
@@ -7,6 +7,7 @@ import RecentCompanies from './components/RecentCompanies';
 import PaymentSummary from './components/PaymentSummary';
 import DashboardLayout from '@/layouts/authenticate-pages/dashboard/layout';
 
+
 const OwnerDashboard = () => {
   const stats = [
     { icon: <FiBriefcase />, title: "Total Companies", value: "142", change: "+12%", trend: "up" },
@@ -14,6 +15,8 @@ const OwnerDashboard = () => {
     { icon: <FiUserCheck />, title: "Active Subscriptions", value: "118", change: "+5%", trend: "up" },
     { icon: <FiClock />, title: "Pending Tickets", value: "7", change: "-2", trend: "down" },
   ];
+
+
 
   return (
     <DashboardLayout title="Service Provider" short="SP">

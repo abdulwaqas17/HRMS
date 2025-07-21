@@ -8,6 +8,7 @@ import { ownerRoutes } from "./routes/authenticate-routes/ownerRoutes.jsx";
 import { adminRoutes } from "./routes/authenticate-routes/adminRoutes.jsx";
 import { hrRoutes } from "./routes/authenticate-routes/hrRoutes.jsx";
 import { registerRoutes } from "./routes/non-authenticate-routes/registerRoutes.jsx";
+import { CompanyProvider } from "./context/CompanyContext.jsx";
 // App.jsx
 // import { nonAuthRoutes } from "@/routes/non-authenticate-routes/nonAuthRoutes.jsx";
 // import { ownerRoutes } from "@/routes/authenticate-routes/ownerRoutes.jsx";
@@ -26,14 +27,17 @@ function App() {
   ];
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {allRoutes.map((route, i) => (
-          <Route key={i} path={route.path} element={route.element} />
-        ))}
-      </Routes>
-      <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
-    </BrowserRouter>
+<BrowserRouter>
+  <CompanyProvider>
+    <Routes>
+      {allRoutes.map((route, i) => (
+        <Route key={i} path={route.path} element={route.element} />
+      ))}
+    </Routes>
+    <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
+  </CompanyProvider>
+</BrowserRouter>
+
   );
 }
 
